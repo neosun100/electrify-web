@@ -27,6 +27,7 @@ import {
 } from './config';
 import { runWizard, runQuickWizard } from './wizard';
 import { runDoctor } from './security';
+import { listApps, uninstallApp, AppRecord } from './registry';
 
 // @types/yargs@17.x started pretending yargs.argv can be a promise:
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/8e17f9ca957a06040badb53ae7688fbb74229ccf/types/yargs/index.d.ts#L73
@@ -53,6 +54,8 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       '  $0 build               Build from config file\n' +
       '  $0 presets             List available presets\n' +
       '  $0 doctor              Check system environment\n' +
+      '  $0 list                List installed apps\n' +
+      '  $0 remove <name>       Uninstall an app\n' +
       '  $0 <url>               Quick build from URL',
     )
     .example(
@@ -771,6 +774,48 @@ if (require.main === module) {
         console.error('Doctor check failed:', err);
         process.exit(1);
       });
+  }
+  // list 命令 - 列出已安装的应用
+  else if (firstArg === 'list') {
+    console.log('\n📦 Installed Apps (created by eweb)\n');
+    const apps = listApps();
+    if (apps.length === 0) {
+      console.log('  No apps found. Create one with: eweb <url>\n');
+    } else {
+      apps.forEach((app: AppRecord, index: number) => {
+        console.log(`  ${index + 1}. ${app.name}`);
+        console.log(`     URL: ${app.url}`);
+        console.log(`     Path: ${app.path}`);
+        console.log(`     Platform: ${app.platform}/${app.arch}`);
+        console.log(`     Created: ${new Date(app.createdAt).toLocaleString()}`);
+        console.log('');
+      });
+      console.log(`Total: ${apps.length} app(s)\n`);
+    }
+  }
+  // remove 命令 - 卸载应用
+  else if (firstArg === 'remove' || firstArg === 'uninstall') {
+    const appName = process.argv[3];
+    const purge = process.argv.includes('--purge');
+    
+    if (!appName) {
+      console.error('❌ Please specify app name: eweb remove <name>');
+      console.log('\nInstalled apps:');
+      listApps().forEach((app: AppRecord) => console.log(`  - ${app.name}`));
+      process.exit(1);
+    }
+    
+    console.log(`\n🗑️  Uninstalling "${appName}"...`);
+    const result = uninstallApp(appName, purge);
+    if (result.success) {
+      console.log(`✅ ${result.message}`);
+      if (!purge) {
+        console.log('   Tip: Use --purge to also remove user data (cookies, cache)\n');
+      }
+    } else {
+      console.error(`❌ ${result.message}`);
+      process.exit(1);
+    }
   }
   // 常规构建流程
   else {

@@ -18,6 +18,7 @@ import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
 import { performSecurityCheck } from '../security';
 import { logSmartDefaults } from '../infer/inferDefaults';
+import { registerApp } from '../registry';
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'icon',
@@ -269,6 +270,17 @@ export async function buildNativefierApp(
   log.info(
     `App built to ${appPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
   );
+
+  // 注册应用到本地注册表
+  registerApp({
+    name: options.packager.name as string,
+    url: (options.packager.targetUrl as string) || '',
+    path: appPath,
+    platform: (options.packager.platform as string) || process.platform,
+    arch: (options.packager.arch as string) || process.arch,
+    createdAt: new Date().toISOString(),
+    version: (options.nativefier.nativefierVersion as string) || '1.0.0',
+  });
 
   return appPath;
 }
