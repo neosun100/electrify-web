@@ -84,14 +84,18 @@ export function convertIconIfNecessary(options: AppOptions): void {
 
   try {
     if (!iconIsIcns(options.packager.icon)) {
+      log.info('🔄 Converting icon to macOS .icns format...');
       const iconPath = convertToIcns(options.packager.icon);
       options.packager.icon = iconPath;
+      log.info('✅ Icon converted successfully');
     }
     if (options.nativefier.tray !== 'false') {
       convertToTrayIcon(options.packager.icon);
     }
   } catch (err: unknown) {
-    log.warn('Failed to convert icon to .icns, skipping.', err);
+    log.warn('⚠️ Icon conversion failed, app will use default Electron icon.');
+    log.warn('   This usually happens when the source image is corrupted or in an unsupported format.');
+    log.warn('   Tip: Use a PNG image (256x256 or larger) for best results.');
     options.packager.icon = undefined;
   }
 }
