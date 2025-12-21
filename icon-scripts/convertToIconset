@@ -54,17 +54,18 @@ HAVE_GRAPHICSMAGICK=
 HAVE_MAGICK=
 CONVERT=
 
+type sips &>/dev/null && HAVE_SIPS=true
 type gm &>/dev/null && gm version | grep GraphicsMagick &>/dev/null && HAVE_GRAPHICSMAGICK=true && CONVERT="gm convert"
 type magick &>/dev/null && HAVE_MAGICK=true && CONVERT="magick"
 type convert &>/dev/null && [[ -z "$HAVE_MAGICK" ]] && HAVE_IMAGEMAGICK=true && CONVERT="convert"
-type sips &>/dev/null && HAVE_SIPS=true
 
-if [[ -n "$HAVE_MAGICK" || -n "$HAVE_IMAGEMAGICK" || -n "$HAVE_GRAPHICSMAGICK" ]]; then
+# On macOS, prefer sips (native, more reliable)
+if [[ -n "$HAVE_SIPS" ]]; then
+  make_iconset_sips "${SOURCE}" "${DEST}"
+elif [[ -n "$HAVE_MAGICK" || -n "$HAVE_IMAGEMAGICK" || -n "$HAVE_GRAPHICSMAGICK" ]]; then
   PNG_PATH="$(mktemp -d -t nativefier-iconset-XXXXXX)/icon.png"
   "${BASH_SOURCE%/*}/convertToPng" "${SOURCE}" "${PNG_PATH}"
   make_iconset_imagemagick "${PNG_PATH}" "${DEST}"
-elif [[ -n "$HAVE_SIPS" ]]; then
-  make_iconset_sips "${SOURCE}" "${DEST}"
 else
   echo >&2 "Cannot find convert or sips executables"; exit 1;
 fi

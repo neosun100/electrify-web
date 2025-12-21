@@ -1,6 +1,6 @@
 {
   "name": "electrify-web",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Transform any website into a native desktop app with one command",
   "license": "MIT",
   "author": "Electrify Web Contributors",
