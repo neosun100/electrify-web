@@ -78,18 +78,62 @@ export function getAppDataPath(appName: string): string {
   }
 }
 
+/**
+ * 查找应用的实际路径（处理用户移动应用的情况）
+ * 只在注册表中已记录的应用才会查找
+ */
+function findAppPath(app: AppRecord): string | null {
+  // 原路径存在，直接返回
+  if (fs.existsSync(app.path)) {
+    return app.path;
+  }
+
+  // 根据平台在常见位置查找
+  const possiblePaths: string[] = [];
+  
+  if (process.platform === 'darwin') {
+    // macOS: 用户可能把 .app 拖到 Applications
+    possiblePaths.push(
+      path.join('/Applications', `${app.name}.app`),
+      path.join(os.homedir(), 'Applications', `${app.name}.app`),
+      // 也可能是文件夹形式
+      path.join('/Applications', `${app.name}-darwin-arm64`),
+      path.join('/Applications', `${app.name}-darwin-x64`),
+    );
+  } else if (process.platform === 'linux') {
+    possiblePaths.push(
+      path.join(os.homedir(), '.local', 'share', 'applications', app.name),
+      path.join('/opt', app.name),
+    );
+  }
+  // Windows: 用户通常不移动，不额外查找
+
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      log.info(`📍 Found app at new location: ${p}`);
+      return p;
+    }
+  }
+
+  return null;
+}
+
 export function uninstallApp(name: string, purge: boolean = false): { success: boolean; message: string } {
   const app = findApp(name);
   if (!app) {
-    return { success: false, message: `App "${name}" not found in registry` };
+    return { success: false, message: `App "${name}" not found in registry. Only apps created by eweb can be managed.` };
   }
 
-  // 删除应用文件夹
-  if (fs.existsSync(app.path)) {
-    fs.removeSync(app.path);
-    log.info(`🗑️  Removed app folder: ${app.path}`);
+  // 查找应用实际路径
+  const actualPath = findAppPath(app);
+  
+  if (actualPath) {
+    fs.removeSync(actualPath);
+    log.info(`🗑️  Removed app: ${actualPath}`);
   } else {
-    log.warn(`⚠️  App folder not found: ${app.path}`);
+    log.warn(`⚠️  App folder not found at original or common locations.`);
+    log.warn(`   Original path: ${app.path}`);
+    log.warn(`   You may need to delete it manually.`);
   }
 
   // 清除用户数据
