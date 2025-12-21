@@ -1,6 +1,6 @@
 {
   "name": "electrify-web",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Transform any website into a native desktop app with one command",
   "license": "MIT",
   "author": "Electrify Web Contributors",
@@ -36,7 +36,7 @@
   "scripts": {
     "build-app": "cd app && webpack",
     "build-app-static": "ncp app/src/static/ app/lib/static/ && ncp app/dist/preload.js app/lib/preload.js && ncp app/dist/preload.js.map app/lib/preload.js.map",
-    "build": "npm run clean && tsc --build shared src app && npm run build-app && npm run build-app-static",
+    "build": "npm run clean && tsc --build shared src app && npm run build-app && npm run build-app-static && chmod +x lib/cli.js",
     "build:watch": "npm run clean && tsc --build shared src app --watch",
     "changelog": "./.github/generate-changelog",
     "clean": "rimraf coverage/ lib/ app/lib/ app/dist/ shared/lib",
