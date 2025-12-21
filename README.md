@@ -300,7 +300,31 @@ npm test
 
 ## 📋 Changelog
 
-### v1.0.0 (2025-12)
+### v1.0.7 (2025-12-21)
+
+- 🔧 Fix: Ensure `cli.js` has executable permission for global install
+
+### v1.0.6 (2025-12-21)
+
+- 💬 Improve: Better error messages for icon conversion failures
+
+### v1.0.5 (2025-12-21)
+
+- 🔧 Fix: Correct iconset sizes for macOS `iconutil` (removed invalid 64x64)
+
+### v1.0.4 (2025-12-21)
+
+- ✨ Feat: Enable PWA detection by default (`--pwa` is now true)
+
+### v1.0.3 (2025-12-21)
+
+- 🔧 Fix: Prefer native `sips` over ImageMagick on macOS for icon conversion
+
+### v1.0.2 (2025-12-21)
+
+- 🔧 Fix: Support ImageMagick v7 (`magick` command instead of deprecated `convert`)
+
+### v1.0.0 (2025-12-21)
 
 **🎉 Initial Release - Revival of Nativefier**
 
@@ -308,12 +332,13 @@ npm test
 - ✅ Config file support (YAML/JSON)
 - ✅ 8 smart presets
 - ✅ Network icon URL support
-- ✅ PWA manifest detection
+- ✅ PWA manifest detection (enabled by default)
 - ✅ Auto-update system
 - ✅ CVE security checking
 - ✅ Doctor command
 - ✅ Removed 90-day warning
 - ✅ Smart URL-based suggestions
+- ✅ Short command alias: `eweb`
 
 Based on Nativefier v52.0.0, with 2000+ lines of new code.
 
