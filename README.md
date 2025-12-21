@@ -300,6 +300,21 @@ npm test
 
 ## 📋 Changelog
 
+### v1.1.2 (2025-12-21)
+
+- 🧹 Auto-cleanup stale records when apps are manually deleted
+- 📍 Auto-update paths when apps are moved to /Applications
+
+### v1.1.1 (2025-12-21)
+
+- 🔍 Smart app path detection for moved apps (macOS/Linux)
+
+### v1.1.0 (2025-12-21)
+
+- ✨ New command: `eweb list` - List all installed apps
+- ✨ New command: `eweb remove <name>` - Uninstall an app
+- 📝 App registry at `~/.electrify-web/registry.json`
+
 ### v1.0.7 (2025-12-21)
 
 - 🔧 Fix: Ensure `cli.js` has executable permission for global install
