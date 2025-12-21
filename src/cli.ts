@@ -100,7 +100,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
     .option('pwa', {
       description: 'auto-detect PWA manifest and use its settings (name, icon, colors)',
       type: 'boolean',
-      default: false,
+      default: true,
     })
     .option('auto-update', {
       description: 'enable auto-update (github:owner/repo or update server URL)',
