@@ -299,7 +299,7 @@ npm test
 
 ## 📋 Changelog
 
-### v1.0.0 (2024-12)
+### v1.0.0 (2025-12)
 
 **🎉 Initial Release - Revival of Nativefier**
 
