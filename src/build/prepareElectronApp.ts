@@ -12,6 +12,7 @@ import {
 } from '../../shared/src/options/model';
 import { parseJson } from '../utils/parseUtils';
 import { DEFAULT_APP_NAME } from '../constants';
+import { injectAutoUpdate, parseUpdateConfig } from '../updater';
 
 /**
  * Only picks certain app args to pass to nativefier.json
@@ -174,6 +175,7 @@ export async function prepareElectronApp(
   src: string,
   dest: string,
   options: AppOptions,
+  rawOptions?: { autoUpdate?: string },
 ): Promise<void> {
   log.debug(`Copying electron app from ${src} to ${dest}`);
   try {
@@ -203,6 +205,15 @@ export async function prepareElectronApp(
   } catch (err: unknown) {
     log.error('Error copying injection files.', err);
   }
+
+  // 注入自动更新功能
+  if (rawOptions?.autoUpdate) {
+    log.info('🔄 Enabling auto-update...');
+    const updateConfig = parseUpdateConfig(rawOptions.autoUpdate);
+    injectAutoUpdate(dest, updateConfig);
+    log.info('✅ Auto-update enabled');
+  }
+
   const normalizedAppName = changeAppPackageJsonName(
     dest,
     options.packager.name as string,

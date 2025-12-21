@@ -201,7 +201,7 @@ export async function buildNativefierApp(
 
   log.info('\nPreparing Electron app...');
   const tmpPath = getTempDir('app', 0o755);
-  await prepareElectronApp(options.packager.dir, tmpPath, options);
+  await prepareElectronApp(options.packager.dir, tmpPath, options, { autoUpdate: rawOptions.autoUpdate });
 
   log.info('\nConverting icons...');
   options.packager.dir = tmpPath;

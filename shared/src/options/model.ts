@@ -144,6 +144,7 @@ export type RawOptions = {
   buildVersion?: string;
   clearCache?: boolean;
   pwa?: boolean;
+  autoUpdate?: string;
   conceal?: boolean;
   counter?: boolean;
   crashReporter?: string;

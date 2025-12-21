@@ -18,6 +18,7 @@ nativefier 'web.whatsapp.com'
 - 💡 **Smart Suggestions** - Auto-detect app type and suggest optimal settings
 - 🌐 **Network Icon Support** - Use icon URLs directly: `-i "https://..."`
 - 📱 **PWA Support** - Auto-detect PWA manifest with `--pwa` flag
+- 🔄 **Auto-Update** - Built-in update system with `--auto-update`
 - 🩺 **Doctor Command** - Check system environment with `nativefier doctor`
 - 🔐 **CVE Security Check** - Warns about vulnerable Electron versions
 - 🚀 **Improved CLI** - Better help, examples, and error messages

@@ -102,7 +102,11 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       type: 'boolean',
       default: false,
     })
-    .group(['config', 'preset', 'pwa'], decorateYargOptionGroup('Quick Start Options'))
+    .option('auto-update', {
+      description: 'enable auto-update (github:owner/repo or update server URL)',
+      type: 'string',
+    })
+    .group(['config', 'preset', 'pwa', 'auto-update'], decorateYargOptionGroup('Quick Start Options'))
     // App Creation Options
     .option('a', {
       alias: 'arch',
