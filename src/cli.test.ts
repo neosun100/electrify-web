@@ -207,7 +207,6 @@ describe('initArgs + parseArgs', () => {
     { arg: 'disable-context-menu', shortArg: '' },
     { arg: 'disable-dev-tools', shortArg: '' },
     { arg: 'disable-gpu', shortArg: '' },
-    { arg: 'disable-old-build-warning-yesiknowitisinsecure', shortArg: '' },
     { arg: 'enable-es3-apis', shortArg: '' },
     { arg: 'fast-quit', shortArg: 'f' },
     { arg: 'flash', shortArg: '' },

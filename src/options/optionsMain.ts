@@ -26,6 +26,7 @@ import {
 } from '../../shared/src/options/model';
 import { normalizeUrl } from './normalizeUrl';
 import { parseJson } from '../utils/parseUtils';
+import { createAutoLoginInjectFile } from '../autologin';
 
 const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
 
@@ -83,8 +84,6 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       disableDevTools: rawOptions.disableDevTools ?? false,
       disableGpu: rawOptions.disableGpu ?? false,
       diskCacheSize: rawOptions.diskCacheSize,
-      disableOldBuildWarning:
-        rawOptions.disableOldBuildWarningYesiknowitisinsecure ?? false,
       enableEs3Apis: rawOptions.enableEs3Apis ?? false,
       fastQuit: rawOptions.fastQuit ?? false,
       fileDownloadOptions: rawOptions.fileDownloadOptions,
@@ -249,6 +248,18 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       // This is an object we got from an existing config in an upgrade
       log.debug('Using global shortcuts object', rawOptions.globalShortcuts);
       options.nativefier.globalShortcuts = rawOptions.globalShortcuts;
+    }
+  }
+
+  // 处理自动登录
+  if (rawOptions.autoLogin) {
+    const autoLoginScript = createAutoLoginInjectFile(rawOptions.autoLogin);
+    if (autoLoginScript) {
+      if (!options.nativefier.inject) {
+        options.nativefier.inject = [];
+      }
+      options.nativefier.inject.push(autoLoginScript);
+      log.info('🔐 Auto-login script will be injected');
     }
   }
 

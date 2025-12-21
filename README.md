@@ -1,10 +1,8 @@
-Note: Nativefier is unmaintained, please see https://github.com/nativefier/nativefier/issues/1577.
-
-# Nativefier
+# Nativefier Enhanced
 
 ![Example of Nativefier app in the macOS dock](.github/dock-screenshot.png)
 
-You want to make a native-looking wrapper for WhatsApp Web (or any web page).
+Create desktop apps from any website with a single command.
 
 ```bash
 nativefier 'web.whatsapp.com'
@@ -12,90 +10,160 @@ nativefier 'web.whatsapp.com'
 
 ![Walkthrough animation](.github/nativefier-walkthrough.gif)
 
-You're done.
+## ✨ What's New in v53
 
-## Introduction
+- 🧙 **Interactive Wizard** - Guided setup with `nativefier wizard`
+- 📄 **Config File Support** - YAML/JSON configuration files
+- 🎯 **Smart Presets** - Optimized settings for social, productivity, media apps
+- 🚀 **Improved CLI** - Better help, examples, and error messages
+- 🔒 **Enhanced Security** - Removed annoying 90-day warnings, better defaults
 
-Nativefier is a command-line tool to easily create a “desktop app” for any web site
-with minimal fuss. Apps are wrapped by [Electron](https://www.electronjs.org/)
-(which uses Chromium under the hood) in an OS executable (`.app`, `.exe`, etc)
-usable on Windows, macOS and Linux.
+## Quick Start
 
-I built this because I grew tired of having to Alt-Tab to my browser and then search
-through numerous open tabs when using Messenger or
-Whatsapp Web ([HN thread](https://news.ycombinator.com/item?id=10930718)). Nativefier features:
+### Interactive Mode (Recommended for beginners)
+```bash
+nativefier wizard
+```
 
-- Automatically retrieval of app icon / name
-- Injection of custom JS & CSS
-- Many more, see the [API docs](API.md) or `nativefier --help`
+### Quick Build
+```bash
+nativefier 'https://example.com'
+```
+
+### With Preset
+```bash
+nativefier 'https://web.whatsapp.com' --preset social
+```
+
+### From Config File
+```bash
+nativefier init          # Generate config template
+nativefier build         # Build from config
+```
 
 ## Installation
 
-Install Nativefier globally with `npm install -g nativefier` . Requirements:
+```bash
+npm install -g nativefier
+```
 
+Requirements:
 - macOS 10.13+ / Windows / Linux
 - [Node.js](https://nodejs.org/) ≥ 16.9 and npm ≥ 7.10
 
-Optional dependencies:
+## Available Presets
 
-- [ImageMagick](http://www.imagemagick.org/) or [GraphicsMagick](http://www.graphicsmagick.org/) to convert icons.
-  Be sure `convert` + `identify` or `gm` are in your `$PATH`.
-- [Wine](https://www.winehq.org/) to build Windows apps from non-Windows platforms.
-  Be sure `wine` is in your `$PATH`.
+| Preset | Best For | Features |
+|--------|----------|----------|
+| `social` | WhatsApp, Telegram, Discord | Single instance, tray, notifications |
+| `productivity` | Notion, Trello, Slack | Optimized window size, tray |
+| `media` | YouTube, Netflix, Spotify | Honest user-agent, video-optimized |
+| `email` | Gmail, Outlook | Notifications, badge counter |
+| `developer` | GitHub, GitLab, Jira | Dev tools enabled |
+| `minimal` | Basic apps | Minimal configuration |
+| `secure` | Sensitive apps | Strict security settings |
+| `kiosk` | Public displays | Full-screen, locked down |
 
-<details>
-  <summary>Or install with Docker (click to expand)</summary>
+```bash
+nativefier presets  # List all presets
+```
 
-  - Pull the image from [Docker Hub](https://hub.docker.com/r/nativefier/nativefier): `docker pull nativefier/nativefier`
-  - ... or build it yourself: `docker build -t local/nativefier .`
-    (in this case, replace `nativefier/` in the below examples with `local/`)
+## Configuration File
 
-  By default, `nativefier --help` will be executed.
-  To build e.g. a Gmail app into `~/nativefier-apps`,
+Create `nativefier.config.yaml`:
 
-  ```bash
-  docker run --rm -v ~/nativefier-apps:/target/ nativefier/nativefier https://mail.google.com/ /target/
-  ```
+```yaml
+app:
+  name: "My App"
+  url: "https://example.com"
+  icon: "./icon.png"
 
-  You can pass Nativefier flags, and mount volumes to pass local files. E.g. to use an icon,
+window:
+  width: 1280
+  height: 800
 
-  ```bash
-  docker run --rm -v ~/my-icons-folder/:/src -v $TARGET-PATH:/target nativefier/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://web.whatsapp.com/ /target/
-  ```
-</details>
+behavior:
+  singleInstance: true
+  tray: true
 
-<details>
-  <summary>Or install with Snap & AUR (click to expand)</summary>
+security:
+  blockExternalUrls: false
 
-  These repos are *not* managed by Nativefier maintainers; use at your own risk.
-  If using them, for your security, please inspect the build script.
+# Or use a preset
+preset: "social"
+```
 
-  - [Snap](https://snapcraft.io/nativefier)
-  - [AUR](https://aur.archlinux.org/packages/nodejs-nativefier)
-</details>
+Then run:
+```bash
+nativefier build
+```
 
-## Usage
+## Commands
 
-To create an app for medium.com, simply `nativefier 'medium.com'`
+| Command | Description |
+|---------|-------------|
+| `nativefier <url>` | Quick build from URL |
+| `nativefier wizard` | Interactive setup wizard |
+| `nativefier init` | Generate config file template |
+| `nativefier build` | Build from config file |
+| `nativefier presets` | List available presets |
+| `nativefier --help` | Show all options |
 
-Nativefier will try to determine the app name, and well as other options that you
-can override. For example, to override the name, `nativefier --name 'My Medium App' 'medium.com'`
+## Common Options
 
-**Read the [API docs](API.md) or run `nativefier --help`**
-to learn about command-line flags and configure your app.
+```bash
+nativefier <url> [options]
+
+Options:
+  --name, -n          App name
+  --icon, -i          Path to icon file
+  --preset            Use preset configuration
+  --config            Path to config file
+  --platform, -p      Target platform (windows, mac, linux)
+  --arch, -a          CPU architecture (x64, arm64)
+  --single-instance   Allow only one instance
+  --tray              Enable system tray
+  --inject            Inject CSS/JS files
+```
+
+See full documentation: [API.md](API.md)
+
+## Examples
+
+### Social Media App
+```bash
+nativefier 'https://web.whatsapp.com' --preset social --name WhatsApp
+```
+
+### Productivity Tool
+```bash
+nativefier 'https://notion.so' --preset productivity --name Notion
+```
+
+### Custom Configuration
+```bash
+nativefier 'https://example.com' \
+  --name "My App" \
+  --single-instance \
+  --tray \
+  --width 1400 \
+  --height 900
+```
 
 ## Troubleshooting
 
-**See [CATALOG.md](CATALOG.md) for site-specific ideas & workarounds contributed by the community**.
-
-If this doesn’t help, go look at our [issue tracker](https://github.com/nativefier/nativefier/issues).
+See [CATALOG.md](CATALOG.md) for site-specific workarounds.
 
 ## Development
 
-Help welcome on [bugs](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Abug) and
-[feature requests](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request)!
+```bash
+git clone https://github.com/nativefier/nativefier.git
+cd nativefier
+npm install
+npm run build
+npm link
+```
 
-Docs: [Developer / build / hacking](HACKING.md), [API / flags](API.md),
-[Changelog](CHANGELOG.md).
+## License
 
-License: [MIT](LICENSE.md).
+[MIT](LICENSE.md)

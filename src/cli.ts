@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 
+import * as fs from 'fs';
+import * as path from 'path';
 import electronPackager = require('electron-packager');
 import * as log from 'loglevel';
 import yargs from 'yargs';
@@ -16,6 +18,14 @@ import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 import { RawOptions } from '../shared/src/options/model';
 import { parseJson } from './utils/parseUtils';
+import { listPresets, applyPreset, suggestPreset } from './presets';
+import {
+  loadConfigFile,
+  findConfigFile,
+  configToOptions,
+  generateConfigTemplate,
+} from './config';
+import { runWizard, runQuickWizard } from './wizard';
 
 // @types/yargs@17.x started pretending yargs.argv can be a promise:
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/8e17f9ca957a06040badb53ae7688fbb74229ccf/types/yargs/index.d.ts#L73
@@ -35,23 +45,33 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
   const args = yargs(sanitizedArgs)
     .scriptName('nativefier')
     .usage(
-      '$0 <targetUrl> [outputDirectory] [other options]\nor\n$0 --upgrade <pathToExistingApp> [other options]',
+      '$0 <targetUrl> [outputDirectory] [options]\n\n' +
+      'Commands:\n' +
+      '  $0 wizard              Interactive setup wizard\n' +
+      '  $0 init                Generate config file template\n' +
+      '  $0 build               Build from config file\n' +
+      '  $0 presets             List available presets\n' +
+      '  $0 <url>               Quick build from URL',
     )
     .example(
-      '$0 <targetUrl> -n <name>',
-      'Make an app from <targetUrl> and set the application name to <name>',
+      '$0 wizard',
+      'Start interactive wizard for guided setup',
     )
     .example(
-      '$0 --upgrade <pathToExistingApp>',
-      'Upgrade (in place) the existing Nativefier app at <pathToExistingApp>',
+      '$0 https://example.com',
+      'Quick build with auto-detected settings',
     )
     .example(
-      '$0 <targetUrl> -p <platform> -a <arch>',
-      'Make an app from <targetUrl> for the OS <platform> and CPU architecture <arch>',
+      '$0 https://example.com --preset social',
+      'Build with social media preset',
     )
     .example(
-      'for more examples and help...',
-      'See https://github.com/nativefier/nativefier/blob/master/CATALOG.md',
+      '$0 build',
+      'Build from nativefier.config.yaml in current directory',
+    )
+    .example(
+      '$0 --config ./my-config.yaml',
+      'Build from specified config file',
     )
     .positional('targetUrl', {
       description:
@@ -65,6 +85,17 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       normalize: true,
       type: 'string',
     })
+    // New Options
+    .option('config', {
+      description: 'path to config file (YAML or JSON)',
+      normalize: true,
+      type: 'string',
+    })
+    .option('preset', {
+      description: 'use a preset configuration (social, productivity, media, email, developer, minimal, secure, kiosk)',
+      type: 'string',
+    })
+    .group(['config', 'preset'], decorateYargOptionGroup('Quick Start Options'))
     // App Creation Options
     .option('a', {
       alias: 'arch',
@@ -307,6 +338,11 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       string: true,
       type: 'array',
     })
+    .option('auto-login', {
+      description:
+        'auto-fill login form with credentials (format: username:password). Credentials are Base64 encoded in the app.',
+      type: 'string',
+    })
     .option('lang', {
       defaultDescription: 'os language at runtime of the app',
       description:
@@ -330,6 +366,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       [
         'file-download-options',
         'inject',
+        'auto-login',
         'lang',
         'user-agent',
         'user-agent-honest',
@@ -415,13 +452,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       ['disable-gpu', 'enable-es3-apis', 'ignore-gpu-blacklist'],
       decorateYargOptionGroup('Graphics Options'),
     )
-    // (In)Security Options
-    .option('disable-old-build-warning-yesiknowitisinsecure', {
-      default: false,
-      description:
-        'disable warning shown when opening an app made too long ago; Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it',
-      type: 'boolean',
-    })
+    // Security Options
     .option('ignore-certificate', {
       default: false,
       description: 'ignore certificate-related errors',
@@ -434,11 +465,10 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
     })
     .group(
       [
-        'disable-old-build-warning-yesiknowitisinsecure',
         'ignore-certificate',
         'insecure',
       ],
-      decorateYargOptionGroup('(In)Security Options'),
+      decorateYargOptionGroup('Security Options'),
     )
     // Flash Options (DEPRECATED)
     .option('flash', {
@@ -588,10 +618,17 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
     }
   }
 
-  if (!parsed.targetUrl && !parsed.upgrade) {
-    throw new Error(
-      'ERROR: Nativefier must be called with either a targetUrl or the --upgrade option.\n',
-    );
+  // 允许使用配置文件时不需要 targetUrl
+  if (!parsed.targetUrl && !parsed.upgrade && !parsed.config) {
+    // 检查是否有自动发现的配置文件
+    const autoConfig = findConfigFile();
+    if (!autoConfig) {
+      throw new Error(
+        'ERROR: Nativefier must be called with a targetUrl, --upgrade, or --config option.\n' +
+        'Or create a nativefier.config.yaml file in the current directory.\n' +
+        'Run "nativefier init" to generate a config template.\n',
+      );
+    }
   }
 
   parsed.noOverwrite = parsed['no-overwrite'] = !parsed.overwrite;
@@ -652,54 +689,152 @@ function sanitizeArgs(argv: string[]): string[] {
 }
 
 if (require.main === module) {
-  let args: yargs.Argv<RawOptions> | undefined = undefined;
-  let parsedArgs: RawOptions;
-  try {
-    args = initArgs(process.argv.slice(2));
-    parsedArgs = parseArgs(args);
-  } catch (err: unknown) {
-    if (args) {
-      log.error(err);
-      args.showHelp();
-    } else {
-      log.error('Failed to parse command-line arguments. Aborting.', err);
-    }
-    process.exit(1);
-  }
+  // 处理特殊命令
+  const firstArg = process.argv[2];
 
-  const options: RawOptions = {
-    ...parsedArgs,
-  };
-
-  if (options.verbose) {
-    log.setLevel('trace');
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      require('debug').enable('electron-packager');
-    } catch (err: unknown) {
-      log.debug(
-        'Failed to enable electron-packager debug output. This should not happen,',
-        'and suggests their internals changed. Please report an issue.',
-      );
-    }
-
-    log.debug(
-      'Running in verbose mode! This will produce a mountain of logs and',
-      'is recommended only for troubleshooting or if you like Shakespeare.',
-    );
-  } else if (options.quiet) {
-    log.setLevel('silent');
-  } else {
+  // wizard 命令 - 交互式向导
+  if (firstArg === 'wizard') {
     log.setLevel('info');
+    runWizard()
+      .then((options) => buildNativefierApp(options))
+      .catch((error) => {
+        log.error('Error:', error);
+        process.exit(1);
+      });
   }
-
-  checkInternet();
-
-  if (!options.out && process.env.NATIVEFIER_APPS_DIR) {
-    options.out = process.env.NATIVEFIER_APPS_DIR;
+  // init 命令 - 生成配置文件模板
+  else if (firstArg === 'init') {
+    const format = process.argv[3] === '--json' ? 'json' : 'yaml';
+    const fileName = format === 'json' ? 'nativefier.config.json' : 'nativefier.config.yaml';
+    const template = generateConfigTemplate(format);
+    fs.writeFileSync(fileName, template);
+    console.log(`✅ Created ${fileName}`);
+    console.log(`\nEdit the file and run: nativefier build`);
   }
+  // build 命令 - 从配置文件构建
+  else if (firstArg === 'build') {
+    log.setLevel('info');
+    const configPath = process.argv[3] || findConfigFile();
+    if (!configPath) {
+      log.error('No config file found. Run "nativefier init" to create one.');
+      process.exit(1);
+    }
+    try {
+      const config = loadConfigFile(configPath);
+      const options = configToOptions(config);
+      log.info(`📄 Using config: ${configPath}`);
+      buildNativefierApp(options).catch((error) => {
+        log.error('Error during build:', error);
+        process.exit(1);
+      });
+    } catch (err) {
+      log.error('Failed to load config:', err);
+      process.exit(1);
+    }
+  }
+  // presets 命令 - 列出预设
+  else if (firstArg === 'presets') {
+    console.log('\n📋 Available Presets:\n');
+    listPresets().forEach((preset) => {
+      console.log(`  ${preset.name.padEnd(15)} - ${preset.description}`);
+    });
+    console.log('\nUsage: nativefier <url> --preset <name>\n');
+  }
+  // 常规构建流程
+  else {
+    let args: yargs.Argv<RawOptions> | undefined = undefined;
+    let parsedArgs: RawOptions;
+    try {
+      args = initArgs(process.argv.slice(2));
+      parsedArgs = parseArgs(args);
+    } catch (err: unknown) {
+      if (args) {
+        log.error(err);
+        args.showHelp();
+      } else {
+        log.error('Failed to parse command-line arguments. Aborting.', err);
+      }
+      process.exit(1);
+    }
 
-  buildNativefierApp(options).catch((error) => {
-    log.error('Error during build. Run with --verbose for details.', error);
-  });
+    let options: RawOptions = {
+      ...parsedArgs,
+    };
+
+    // 处理配置文件
+    if (options.config) {
+      try {
+        const config = loadConfigFile(options.config as string);
+        const configOptions = configToOptions(config);
+        options = { ...configOptions, ...options };
+        delete options.config;
+      } catch (err) {
+        log.error('Failed to load config file:', err);
+        process.exit(1);
+      }
+    } else {
+      // 自动发现配置文件
+      const autoConfig = findConfigFile();
+      if (autoConfig && !options.targetUrl) {
+        try {
+          const config = loadConfigFile(autoConfig);
+          const configOptions = configToOptions(config);
+          options = { ...configOptions, ...options };
+          log.info(`📄 Auto-loaded config: ${autoConfig}`);
+        } catch (err) {
+          log.debug('Failed to auto-load config:', err);
+        }
+      }
+    }
+
+    // 处理预设
+    if (options.preset) {
+      try {
+        options = applyPreset(options, options.preset as string);
+        log.info(`🎯 Applied preset: ${options.preset}`);
+        delete options.preset;
+      } catch (err) {
+        log.error((err as Error).message);
+        process.exit(1);
+      }
+    } else if (options.targetUrl) {
+      // 智能推荐预设
+      const suggested = suggestPreset(options.targetUrl);
+      if (suggested) {
+        log.info(`💡 Tip: Use --preset ${suggested} for optimized settings`);
+      }
+    }
+
+    if (options.verbose) {
+      log.setLevel('trace');
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        require('debug').enable('electron-packager');
+      } catch (err: unknown) {
+        log.debug(
+          'Failed to enable electron-packager debug output. This should not happen,',
+          'and suggests their internals changed. Please report an issue.',
+        );
+      }
+
+      log.debug(
+        'Running in verbose mode! This will produce a mountain of logs and',
+        'is recommended only for troubleshooting or if you like Shakespeare.',
+      );
+    } else if (options.quiet) {
+      log.setLevel('silent');
+    } else {
+      log.setLevel('info');
+    }
+
+    checkInternet();
+
+    if (!options.out && process.env.NATIVEFIER_APPS_DIR) {
+      options.out = process.env.NATIVEFIER_APPS_DIR;
+    }
+
+    buildNativefierApp(options).catch((error) => {
+      log.error('Error during build. Run with --verbose for details.', error);
+    });
+  }
 }

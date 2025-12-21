@@ -36,7 +36,6 @@ export interface AppOptions {
     disableContextMenu: boolean;
     disableDevTools: boolean;
     disableGpu: boolean;
-    disableOldBuildWarning: boolean;
     diskCacheSize?: number;
     electronVersionUsed?: string;
     enableEs3Apis: boolean;
@@ -116,7 +115,6 @@ export type OutputOptions = NativefierOptions & {
   isUpgrade: boolean;
   name: string;
   nativefierVersion: string;
-  oldBuildWarningText: string;
   strictInternalUrls: boolean;
   tabbingIdentifier?: string;
   targetUrl: string;
@@ -135,6 +133,7 @@ export type RawOptions = {
   appVersion?: string;
   arch?: string;
   asar?: boolean | CreateOptions;
+  autoLogin?: string;
   backgroundColor?: string;
   basicAuthPassword?: string;
   basicAuthUsername?: string;
@@ -151,8 +150,6 @@ export type RawOptions = {
   disableContextMenu?: boolean;
   disableDevTools?: boolean;
   disableGpu?: boolean;
-  disableOldBuildWarning?: boolean;
-  disableOldBuildWarningYesiknowitisinsecure?: boolean;
   diskCacheSize?: number;
   electronVersion?: string;
   electronVersionUsed?: string;
@@ -183,6 +180,7 @@ export type RawOptions = {
   overwrite?: boolean;
   platform?: string;
   portable?: boolean;
+  preset?: string;
   processEnvs?: string;
   proxyRules?: string;
   quiet?: boolean;
@@ -204,6 +202,7 @@ export type RawOptions = {
   x?: number;
   y?: number;
   zoom?: number;
+  config?: string;
 };
 
 export type WindowOptions = {

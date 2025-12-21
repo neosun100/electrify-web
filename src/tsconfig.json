@@ -23,6 +23,9 @@
       "dom"
     ],
   },
+  "exclude": [
+    "playwright-test.ts"
+  ],
   "references": [
     {
       "path": "../shared"

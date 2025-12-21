@@ -1,7 +1,7 @@
 {
   "name": "nativefier",
-  "version": "52.0.0",
-  "description": "Wrap web apps natively",
+  "version": "53.0.0",
+  "description": "Create desktop apps from any website - Enhanced Edition",
   "license": "MIT",
   "author": "Goh Jia Hao",
   "engines_README": "Bumping the minimum required Node version? You must bump: 1. package.json -> engines.node, 2. package.json -> devDependencies.@types/node , 3. tsconfig.json -> {target, lib} , 4. .github/workflows/ci.yml -> node-version",

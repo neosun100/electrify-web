@@ -42,7 +42,6 @@ function pickElectronAppArgs(options: AppOptions): OutputOptions {
     disableContextMenu: options.nativefier.disableContextMenu,
     disableDevTools: options.nativefier.disableDevTools,
     disableGpu: options.nativefier.disableGpu,
-    disableOldBuildWarning: options.nativefier.disableOldBuildWarning,
     diskCacheSize: options.nativefier.diskCacheSize,
     download: options.packager.download,
     electronVersionUsed: options.packager.electronVersion,
@@ -94,12 +93,6 @@ function pickElectronAppArgs(options: AppOptions): OutputOptions {
     x: options.nativefier.x,
     y: options.nativefier.y,
     zoom: options.nativefier.zoom,
-    // OLD_BUILD_WARNING_TEXT is an undocumented env. var to let *packagers*
-    // tweak the message shown on warning about an old build, to something
-    // more tailored to their audience (who might not even know Nativefier).
-    // See https://github.com/kelyvin/Google-Messages-For-Desktop/issues/34#issuecomment-812731144
-    // and https://github.com/nativefier/nativefier/issues/1131#issuecomment-812646988
-    oldBuildWarningText: process.env.OLD_BUILD_WARNING_TEXT || '',
   };
 }
 
