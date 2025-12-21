@@ -49,7 +49,35 @@ export function registerApp(app: AppRecord): void {
 }
 
 export function listApps(): AppRecord[] {
-  return loadRegistry().apps;
+  const registry = loadRegistry();
+  
+  // 自动清理无效记录（应用已被手动删除）
+  const validApps: AppRecord[] = [];
+  const invalidApps: AppRecord[] = [];
+  
+  for (const app of registry.apps) {
+    const actualPath = findAppPath(app);
+    if (actualPath) {
+      // 更新路径（如果应用被移动了）
+      if (actualPath !== app.path) {
+        app.path = actualPath;
+      }
+      validApps.push(app);
+    } else {
+      invalidApps.push(app);
+    }
+  }
+  
+  // 如果有无效记录，清理并保存
+  if (invalidApps.length > 0) {
+    registry.apps = validApps;
+    saveRegistry(registry);
+    invalidApps.forEach(app => {
+      log.info(`🧹 Cleaned up stale record: ${app.name} (app was manually deleted)`);
+    });
+  }
+  
+  return validApps;
 }
 
 export function findApp(name: string): AppRecord | undefined {
