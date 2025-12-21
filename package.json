@@ -45,7 +45,7 @@
     "lint:format": "prettier --write 'src/**/*.ts' 'app/src/**/*.ts' 'shared/src/**/*.ts'",
     "lint": "eslint shared app src --ext .ts",
     "list-outdated-deps": "npm out -l; cd app && npm out -l; true",
-    "prepare": "cd app && npm ci && cd .. && npm run build",
+    "prepare": "cd app && npm install --legacy-peer-deps && cd .. && npm run build",
     "relock:cli": "rm -rf ./node_modules/ ./npm-shrinkwrap.json && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out -l",
     "relock:app": "rm -rf ./app/node_modules/ ./app/npm-shrinkwrap.json && cd app && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out -l",
     "relock": "npm run relock:cli; npm run relock:app",
