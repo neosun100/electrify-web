@@ -35,7 +35,8 @@ package-lock.json
 app/package-lock.json
 
 # === Build Output ===
-lib/
+# lib/ is included for GitHub install support
+# lib/
 app/lib/*
 app/dist/*
 dist/
