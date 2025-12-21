@@ -125,8 +125,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
     .option('i', {
       alias: 'icon',
       description:
-        'the icon file to use as the icon for the app (.ico on Windows, .icns/.png on macOS, .png on Linux)',
-      normalize: true,
+        'the icon file to use as the icon for the app (.ico on Windows, .icns/.png on macOS, .png on Linux). Supports local paths or URLs.',
       type: 'string',
     })
     .option('n', {

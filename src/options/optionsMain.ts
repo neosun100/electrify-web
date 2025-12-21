@@ -27,6 +27,31 @@ import {
 import { normalizeUrl } from './normalizeUrl';
 import { parseJson } from '../utils/parseUtils';
 import { createAutoLoginInjectFile } from '../autologin';
+import { downloadFile, getTempDir } from '../helpers/helpers';
+import * as path from 'path';
+
+/**
+ * 如果是网络 URL，下载图标到本地
+ */
+async function resolveIcon(icon: string | undefined): Promise<string | undefined> {
+  if (!icon || (!icon.startsWith('http://') && !icon.startsWith('https://'))) {
+    return icon;
+  }
+  log.info(`📥 Downloading icon from ${icon}...`);
+  try {
+    const result = await downloadFile(icon);
+    if (!result?.data) return undefined;
+    const tmpDir = getTempDir('icon');
+    const ext = result.ext || path.extname(new URL(icon).pathname) || '.png';
+    const iconPath = path.join(tmpDir, `icon${ext}`);
+    await fs.promises.writeFile(iconPath, result.data);
+    log.info(`✅ Icon downloaded to ${iconPath}`);
+    return iconPath;
+  } catch (err) {
+    log.warn('Failed to download icon:', (err as Error).message);
+    return undefined;
+  }
+}
 
 const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
 
@@ -35,6 +60,9 @@ const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
+  // 提前处理网络图标
+  const resolvedIcon = await resolveIcon(rawOptions.icon);
+  
   const options: AppOptions = {
     packager: {
       appCopyright: rawOptions.appCopyright,
@@ -45,7 +73,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       darwinDarkModeSupport: rawOptions.darwinDarkModeSupport ?? false,
       dir: PLACEHOLDER_APP_DIR,
       electronVersion: rawOptions.electronVersion ?? DEFAULT_ELECTRON_VERSION,
-      icon: rawOptions.icon,
+      icon: resolvedIcon,
       name: typeof rawOptions.name === 'string' ? rawOptions.name : '',
       out: rawOptions.out ?? process.cwd(),
       overwrite: rawOptions.overwrite,
