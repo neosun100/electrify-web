@@ -11,9 +11,9 @@ import { applyPreset } from '../presets';
 
 // 配置文件名优先级
 const CONFIG_FILE_NAMES = [
-  'nativefier.config.yaml',
-  'nativefier.config.yml',
-  'nativefier.config.json',
+  'electrify.config.yaml',
+  'electrify.config.yml',
+  'electrify.config.json',
   'nativefier.yaml',
   'nativefier.yml',
   'nativefier.json',

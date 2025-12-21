@@ -1,93 +1,138 @@
-# Nativefier Enhanced
+<div align="center">
 
-![Example of Nativefier app in the macOS dock](.github/dock-screenshot.png)
+# ⚡ Electrify Web
 
-Create desktop apps from any website with a single command.
+**Transform any website into a native desktop app with one command**
+
+[English](README.md) | [简体中文](README_CN.md) | [繁體中文](README_TW.md) | [日本語](README_JP.md)
+
+[![npm version](https://img.shields.io/npm/v/electrify-web.svg)](https://www.npmjs.com/package/electrify-web)
+[![npm downloads](https://img.shields.io/npm/dm/electrify-web.svg)](https://www.npmjs.com/package/electrify-web)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/node/v/electrify-web.svg)](https://nodejs.org)
+
+<img src=".github/demo.gif" alt="Demo" width="600">
+
+</div>
+
+---
+
+## 🎯 Why Electrify Web?
+
+**Electrify Web** is a modern revival of the abandoned [Nativefier](https://github.com/nativefier/nativefier) project. The original project was unmaintained since 2023, leaving thousands of users without updates or security patches.
+
+### What We Fixed & Improved
+
+| Issue | Original Nativefier | Electrify Web |
+|-------|---------------------|---------------|
+| 🔒 Security | Annoying 90-day warnings | Smart CVE detection |
+| 🎨 Icons | Local files only | URL support with auto-download |
+| ⚙️ Config | 60+ CLI flags | YAML/JSON config files |
+| 🧙 UX | Complex commands | Interactive wizard |
+| 📱 PWA | Not supported | Full manifest detection |
+| 🔄 Updates | None | Built-in auto-update |
+| 📦 Presets | None | 8 optimized presets |
+
+---
+
+## ✨ Features
+
+- 🚀 **One Command Build** - `electrify https://example.com`
+- 🧙 **Interactive Wizard** - Guided setup for beginners
+- 📄 **Config Files** - YAML/JSON with inheritance support
+- 🎯 **Smart Presets** - Optimized for social, productivity, media apps
+- 💡 **Auto Detection** - Suggests best settings based on URL
+- 🌐 **Network Icons** - Use icon URLs directly
+- 📱 **PWA Support** - Auto-detect web app manifest
+- 🔄 **Auto-Update** - Built-in update system
+- 🩺 **Doctor Command** - Environment diagnostics
+- 🔐 **CVE Checking** - Warns about vulnerable Electron versions
+- 🖥️ **Cross-Platform** - Windows, macOS, Linux
+
+---
+
+## 📦 Installation
 
 ```bash
-nativefier 'web.whatsapp.com'
+# Install globally via npm
+npm install -g electrify-web
+
+# Or use npx (no install needed)
+npx electrify-web https://example.com
+
+# Verify installation
+electrify --version
 ```
 
-![Walkthrough animation](.github/nativefier-walkthrough.gif)
+### Requirements
 
-## ✨ What's New in v53
+- Node.js >= 16.16.0
+- npm >= 8.11.0
+- macOS 10.13+ / Windows 10+ / Linux
 
-- 🧙 **Interactive Wizard** - Guided setup with `nativefier wizard`
-- 📄 **Config File Support** - YAML/JSON configuration files with inheritance
-- 🎯 **Smart Presets** - Optimized settings for social, productivity, media apps
-- 💡 **Smart Suggestions** - Auto-detect app type and suggest optimal settings
-- 🌐 **Network Icon Support** - Use icon URLs directly: `-i "https://..."`
-- 📱 **PWA Support** - Auto-detect PWA manifest with `--pwa` flag
-- 🔄 **Auto-Update** - Built-in update system with `--auto-update`
-- 🩺 **Doctor Command** - Check system environment with `nativefier doctor`
-- 🔐 **CVE Security Check** - Warns about vulnerable Electron versions
-- 🚀 **Improved CLI** - Better help, examples, and error messages
-- 🔒 **Enhanced Security** - Removed annoying 90-day warnings, better defaults
+---
 
-## Quick Start
+## 🚀 Quick Start
 
-### Interactive Mode (Recommended for beginners)
-```bash
-nativefier wizard
-```
-
-### Quick Build
-```bash
-nativefier 'https://example.com'
-```
-
-### With PWA Auto-Detection
-```bash
-nativefier 'https://web.whatsapp.com' --pwa
-```
-
-### With Preset
-```bash
-nativefier 'https://web.whatsapp.com' --preset social
-```
-
-### From Config File
-```bash
-nativefier init          # Generate config template
-nativefier build         # Build from config
-```
-
-## Installation
+### Method 1: Interactive Wizard (Recommended)
 
 ```bash
-npm install -g nativefier
+electrify wizard
 ```
 
-Requirements:
-- macOS 10.13+ / Windows / Linux
-- [Node.js](https://nodejs.org/) ≥ 16.9 and npm ≥ 7.10
+### Method 2: One-Line Build
 
-## Available Presets
+```bash
+electrify https://web.whatsapp.com
+```
+
+### Method 3: With Preset
+
+```bash
+electrify https://web.whatsapp.com --preset social
+```
+
+### Method 4: Config File
+
+```bash
+# Generate config template
+electrify init
+
+# Edit electrify.config.yaml, then build
+electrify build
+```
+
+---
+
+## 🎯 Presets
 
 | Preset | Best For | Features |
 |--------|----------|----------|
-| `social` | WhatsApp, Telegram, Discord | Single instance, tray, notifications |
-| `productivity` | Notion, Trello, Slack | Optimized window size, tray |
+| `social` | WhatsApp, Discord, Telegram | Single instance, tray, notifications |
+| `productivity` | Notion, Trello, Slack | Optimized window, tray |
 | `media` | YouTube, Netflix, Spotify | Honest user-agent, video-optimized |
 | `email` | Gmail, Outlook | Notifications, badge counter |
 | `developer` | GitHub, GitLab, Jira | Dev tools enabled |
 | `minimal` | Basic apps | Minimal configuration |
-| `secure` | Sensitive apps | Strict security settings |
-| `kiosk` | Public displays | Full-screen, locked down |
+| `secure` | Banking, sensitive apps | Strict security |
+| `kiosk` | Public displays | Full-screen, locked |
 
 ```bash
-nativefier presets  # List all presets
+# List all presets
+electrify presets
 ```
 
-## Configuration File
+---
 
-Create `nativefier.config.yaml`:
+## ⚙️ Configuration
+
+### Config File (electrify.config.yaml)
 
 ```yaml
 app:
   name: "My App"
   url: "https://example.com"
-  icon: "./icon.png"
+  icon: "./icon.png"  # or URL: "https://..."
 
 window:
   width: 1280
@@ -97,85 +142,210 @@ behavior:
   singleInstance: true
   tray: true
 
-security:
-  blockExternalUrls: false
-
-# Or use a preset
+# Use a preset as base
 preset: "social"
+
+# Inherit from another config
+extends: "./base.yaml"
 ```
 
-Then run:
+### CLI Options
+
 ```bash
-nativefier build
+electrify <url> [options]
+
+Options:
+  -n, --name          App name
+  -i, --icon          Icon path or URL
+  --preset            Use preset (social, productivity, etc.)
+  --config            Config file path
+  --pwa               Auto-detect PWA manifest
+  --auto-update       Enable auto-update (github:owner/repo or URL)
+  -p, --platform      Target platform (windows, mac, linux)
+  -a, --arch          CPU architecture (x64, arm64)
+  --single-instance   Allow only one instance
+  --tray              Enable system tray
 ```
 
-## Commands
+See [API.md](API.md) for full documentation.
+
+---
+
+## 📱 PWA Support
+
+Automatically detect and use PWA manifest settings:
+
+```bash
+electrify https://web.whatsapp.com --pwa
+```
+
+This will:
+- Extract app name from manifest
+- Download the best icon
+- Apply theme colors
+- Configure display mode
+
+---
+
+## 🔄 Auto-Update
+
+Enable automatic updates for your app:
+
+```bash
+# GitHub releases
+electrify https://example.com --auto-update github:myorg/myrepo
+
+# Custom update server
+electrify https://example.com --auto-update https://updates.example.com
+```
+
+---
+
+## 🩺 Diagnostics
+
+Check your environment:
+
+```bash
+electrify doctor
+```
+
+Output:
+```
+🩺 Electrify Web Doctor - Environment Check
+
+  ✅ Node.js         v20.10.0 ✓
+  ✅ npm             10.2.0 ✓
+  ✅ Platform        linux (x64)
+  ✅ Disk Space      50G available
+  ✅ Network         npm registry reachable ✓
+  ✅ Electron Cache  3 versions cached
+
+✅ All checks passed! Ready to build.
+```
+
+---
+
+## 🛠️ Commands
 
 | Command | Description |
 |---------|-------------|
-| `nativefier <url>` | Quick build from URL |
-| `nativefier wizard` | Interactive setup wizard |
-| `nativefier init` | Generate config file template |
-| `nativefier build` | Build from config file |
-| `nativefier presets` | List available presets |
-| `nativefier doctor` | Check system environment |
-| `nativefier --help` | Show all options |
+| `electrify <url>` | Build app from URL |
+| `electrify wizard` | Interactive setup |
+| `electrify init` | Generate config template |
+| `electrify build` | Build from config file |
+| `electrify presets` | List available presets |
+| `electrify doctor` | Check environment |
+| `electrify --help` | Show all options |
 
-## Common Options
+---
 
-```bash
-nativefier <url> [options]
+## 📁 Project Structure
 
-Options:
-  --name, -n          App name
-  --icon, -i          Path to icon file or URL (auto-downloads)
-  --preset            Use preset configuration
-  --config            Path to config file
-  --platform, -p      Target platform (windows, mac, linux)
-  --arch, -a          CPU architecture (x64, arm64)
-  --single-instance   Allow only one instance
-  --tray              Enable system tray
-  --inject            Inject CSS/JS files
+```
+electrify-web/
+├── src/                    # CLI source code
+│   ├── cli.ts              # Command-line interface
+│   ├── build/              # Build logic
+│   ├── options/            # Option processing
+│   ├── presets/            # Preset configurations
+│   ├── config/             # Config file handling
+│   ├── wizard/             # Interactive wizard
+│   ├── pwa/                # PWA detection
+│   ├── security/           # CVE checking
+│   └── updater/            # Auto-update system
+├── app/                    # Electron app template
+│   └── src/
+│       ├── main.ts         # Main process
+│       └── preload.ts      # Preload script
+├── shared/                 # Shared types
+└── docs/                   # Documentation
 ```
 
-See full documentation: [API.md](API.md)
+---
 
-## Examples
+## 🔧 Tech Stack
 
-### Social Media App
-```bash
-nativefier 'https://web.whatsapp.com' --preset social --name WhatsApp
-```
+- **TypeScript** - Type-safe development
+- **Electron** - Desktop app framework
+- **electron-packager** - App packaging
+- **yargs** - CLI argument parsing
+- **axios** - HTTP requests
 
-### Productivity Tool
-```bash
-nativefier 'https://notion.so' --preset productivity --name Notion
-```
+---
 
-### Custom Configuration
-```bash
-nativefier 'https://example.com' \
-  --name "My App" \
-  --single-instance \
-  --tray \
-  --width 1400 \
-  --height 900
-```
+## 🤝 Contributing
 
-## Troubleshooting
-
-See [CATALOG.md](CATALOG.md) for site-specific workarounds.
-
-## Development
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) first.
 
 ```bash
-git clone https://github.com/nativefier/nativefier.git
-cd nativefier
+# Clone the repo
+git clone https://github.com/neosun100/electrify-web.git
+cd electrify-web
+
+# Install dependencies
 npm install
+
+# Build
 npm run build
+
+# Link for local testing
 npm link
+
+# Run tests
+npm test
 ```
 
-## License
+---
 
-[MIT](LICENSE.md)
+## 📋 Changelog
+
+### v1.0.0 (2024-12)
+
+**🎉 Initial Release - Revival of Nativefier**
+
+- ✅ Interactive wizard (`electrify wizard`)
+- ✅ Config file support (YAML/JSON)
+- ✅ 8 smart presets
+- ✅ Network icon URL support
+- ✅ PWA manifest detection
+- ✅ Auto-update system
+- ✅ CVE security checking
+- ✅ Doctor command
+- ✅ Removed 90-day warning
+- ✅ Smart URL-based suggestions
+
+Based on Nativefier v52.0.0, with 2000+ lines of new code.
+
+---
+
+## 📄 License
+
+[MIT](LICENSE.md) © Electrify Web Contributors
+
+This project is a fork of [Nativefier](https://github.com/nativefier/nativefier), originally created by Goh Jia Hao.
+
+---
+
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=neosun100/electrify-web&type=Date)](https://star-history.com/#neosun100/electrify-web)
+
+---
+
+## 📱 Follow Us
+
+<div align="center">
+
+![WeChat](https://img.aws.xin/uPic/扫码_搜索联合传播样式-标准色版.png)
+
+</div>
+
+---
+
+<div align="center">
+
+**If this project helps you, please give it a ⭐!**
+
+Made with ❤️ by the Electrify Web community
+
+</div>

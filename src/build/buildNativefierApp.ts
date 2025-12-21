@@ -147,7 +147,7 @@ export async function buildNativefierApp(
     log.setLevel('silent');
   }
 
-  log.info('\n🚀 Nativefier - Create desktop apps from any website\n');
+  log.info('\n🚀 Electrify Web - Transform any website into a desktop app\n');
   log.info('Processing options...');
 
   let finalOutDirectory = rawOptions.out ?? process.cwd();

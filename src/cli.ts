@@ -44,7 +44,7 @@ type YargsArgvSync<T> = {
 export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
   const sanitizedArgs = sanitizeArgs(argv);
   const args = yargs(sanitizedArgs)
-    .scriptName('nativefier')
+    .scriptName('electrify')
     .usage(
       '$0 <targetUrl> [outputDirectory] [options]\n\n' +
       'Commands:\n' +
@@ -69,7 +69,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
     )
     .example(
       '$0 build',
-      'Build from nativefier.config.yaml in current directory',
+      'Build from electrify.config.yaml in current directory',
     )
     .example(
       '$0 --config ./my-config.yaml',
@@ -635,8 +635,8 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
     if (!autoConfig) {
       throw new Error(
         'ERROR: Nativefier must be called with a targetUrl, --upgrade, or --config option.\n' +
-        'Or create a nativefier.config.yaml file in the current directory.\n' +
-        'Run "nativefier init" to generate a config template.\n',
+        'Or create a electrify.config.yaml file in the current directory.\n' +
+        'Run "electrify init" to generate a config template.\n',
       );
     }
   }
@@ -670,7 +670,7 @@ function sanitizeArgs(argv: string[]): string[] {
   argv.forEach((arg) => {
     if (isArgFormatInvalid(arg)) {
       throw new Error(
-        `Invalid argument passed: ${arg} .\nNativefier supports short options (like "-n") and long options (like "--name"), all lowercase. Run "nativefier --help" for help.\nAborting`,
+        `Invalid argument passed: ${arg} .\nNativefier supports short options (like "-n") and long options (like "--name"), all lowercase. Run "electrify --help" for help.\nAborting`,
       );
     }
     const isLastArg = sanitizedArgs.length + 1 === argv.length;
@@ -715,18 +715,18 @@ if (require.main === module) {
   // init 命令 - 生成配置文件模板
   else if (firstArg === 'init') {
     const format = process.argv[3] === '--json' ? 'json' : 'yaml';
-    const fileName = format === 'json' ? 'nativefier.config.json' : 'nativefier.config.yaml';
+    const fileName = format === 'json' ? 'electrify.config.json' : 'electrify.config.yaml';
     const template = generateConfigTemplate(format);
     fs.writeFileSync(fileName, template);
     console.log(`✅ Created ${fileName}`);
-    console.log(`\nEdit the file and run: nativefier build`);
+    console.log(`\nEdit the file and run: electrify build`);
   }
   // build 命令 - 从配置文件构建
   else if (firstArg === 'build') {
     log.setLevel('info');
     const configPath = process.argv[3] || findConfigFile();
     if (!configPath) {
-      log.error('No config file found. Run "nativefier init" to create one.');
+      log.error('No config file found. Run "electrify init" to create one.');
       process.exit(1);
     }
     try {
@@ -748,11 +748,11 @@ if (require.main === module) {
     listPresets().forEach((preset) => {
       console.log(`  ${preset.name.padEnd(15)} - ${preset.description}`);
     });
-    console.log('\nUsage: nativefier <url> --preset <name>\n');
+    console.log('\nUsage: electrify <url> --preset <name>\n');
   }
   // doctor 命令 - 诊断环境
   else if (firstArg === 'doctor') {
-    console.log('\n🩺 Nativefier Doctor - Environment Check\n');
+    console.log('\n🩺 Electrify Web Doctor - Environment Check\n');
     runDoctor()
       .then(({ passed, checks }) => {
         checks.forEach((check) => {
