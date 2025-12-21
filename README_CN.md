@@ -60,6 +60,9 @@ npx electrify-web https://example.com
 
 # 验证安装
 electrify --version
+
+# 简短别名
+eweb --version
 ```
 
 ### 系统要求

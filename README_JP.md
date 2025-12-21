@@ -60,6 +60,9 @@ npx electrify-web https://example.com
 
 # インストール確認
 electrify --version
+
+# 短縮エイリアス
+eweb --version
 ```
 
 ### 必要条件

@@ -60,6 +60,9 @@ npx electrify-web https://example.com
 
 # Verify installation
 electrify --version
+
+# Short alias
+eweb --version
 ```
 
 ### Requirements
