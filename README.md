@@ -35,7 +35,7 @@
 
 ## ✨ Features
 
-- 🚀 **One Command Build** - `electrify https://example.com`
+- 🚀 **One Command Build** - `eweb https://example.com`
 - 🧙 **Interactive Wizard** - Guided setup for beginners
 - 📄 **Config Files** - YAML/JSON with inheritance support
 - 🎯 **Smart Presets** - Optimized for social, productivity, media apps
@@ -78,29 +78,29 @@ eweb --version
 ### Method 1: Interactive Wizard (Recommended)
 
 ```bash
-electrify wizard
+eweb wizard
 ```
 
 ### Method 2: One-Line Build
 
 ```bash
-electrify https://web.whatsapp.com
+eweb https://web.whatsapp.com
 ```
 
 ### Method 3: With Preset
 
 ```bash
-electrify https://web.whatsapp.com --preset social
+eweb https://web.whatsapp.com --preset social
 ```
 
 ### Method 4: Config File
 
 ```bash
 # Generate config template
-electrify init
+eweb init
 
 # Edit electrify.config.yaml, then build
-electrify build
+eweb build
 ```
 
 ---
@@ -120,7 +120,7 @@ electrify build
 
 ```bash
 # List all presets
-electrify presets
+eweb presets
 ```
 
 ---
@@ -153,7 +153,7 @@ extends: "./base.yaml"
 ### CLI Options
 
 ```bash
-electrify <url> [options]
+eweb <url> [options]
 
 Options:
   -n, --name          App name
@@ -177,7 +177,7 @@ See [API.md](API.md) for full documentation.
 Automatically detect and use PWA manifest settings:
 
 ```bash
-electrify https://web.whatsapp.com --pwa
+eweb https://web.whatsapp.com --pwa
 ```
 
 This will:
@@ -194,10 +194,10 @@ Enable automatic updates for your app:
 
 ```bash
 # GitHub releases
-electrify https://example.com --auto-update github:myorg/myrepo
+eweb https://example.com --auto-update github:myorg/myrepo
 
 # Custom update server
-electrify https://example.com --auto-update https://updates.example.com
+eweb https://example.com --auto-update https://updates.example.com
 ```
 
 ---
@@ -207,7 +207,7 @@ electrify https://example.com --auto-update https://updates.example.com
 Check your environment:
 
 ```bash
-electrify doctor
+eweb doctor
 ```
 
 Output:
@@ -230,13 +230,13 @@ Output:
 
 | Command | Description |
 |---------|-------------|
-| `electrify <url>` | Build app from URL |
-| `electrify wizard` | Interactive setup |
-| `electrify init` | Generate config template |
-| `electrify build` | Build from config file |
-| `electrify presets` | List available presets |
-| `electrify doctor` | Check environment |
-| `electrify --help` | Show all options |
+| `eweb <url>` | Build app from URL |
+| `eweb wizard` | Interactive setup |
+| `eweb init` | Generate config template |
+| `eweb build` | Build from config file |
+| `eweb presets` | List available presets |
+| `eweb doctor` | Check environment |
+| `eweb --help` | Show all options |
 
 ---
 
@@ -304,7 +304,7 @@ npm test
 
 **🎉 Initial Release - Revival of Nativefier**
 
-- ✅ Interactive wizard (`electrify wizard`)
+- ✅ Interactive wizard (`eweb wizard`)
 - ✅ Config file support (YAML/JSON)
 - ✅ 8 smart presets
 - ✅ Network icon URL support

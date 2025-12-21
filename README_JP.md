@@ -35,7 +35,7 @@
 
 ## ✨ 機能
 
-- 🚀 **ワンコマンドビルド** - `electrify https://example.com`
+- 🚀 **ワンコマンドビルド** - `eweb https://example.com`
 - 🧙 **インタラクティブウィザード** - 初心者向けガイド付きセットアップ
 - 📄 **設定ファイル** - 継承をサポートするYAML/JSON
 - 🎯 **スマートプリセット** - SNS、生産性、メディアアプリ向けに最適化
@@ -78,29 +78,29 @@ eweb --version
 ### 方法1：インタラクティブウィザード（初心者推奨）
 
 ```bash
-electrify wizard
+eweb wizard
 ```
 
 ### 方法2：ワンラインビルド
 
 ```bash
-electrify https://web.whatsapp.com
+eweb https://web.whatsapp.com
 ```
 
 ### 方法3：プリセット使用
 
 ```bash
-electrify https://web.whatsapp.com --preset social
+eweb https://web.whatsapp.com --preset social
 ```
 
 ### 方法4：設定ファイル
 
 ```bash
 # 設定テンプレートを生成
-electrify init
+eweb init
 
 # electrify.config.yamlを編集してビルド
-electrify build
+eweb build
 ```
 
 ---
@@ -120,7 +120,7 @@ electrify build
 
 ```bash
 # すべてのプリセットを表示
-electrify presets
+eweb presets
 ```
 
 ---
@@ -153,7 +153,7 @@ extends: "./base.yaml"
 ### CLIオプション
 
 ```bash
-electrify <url> [オプション]
+eweb <url> [オプション]
 
 オプション:
   -n, --name          アプリ名
@@ -176,13 +176,13 @@ electrify <url> [オプション]
 
 | コマンド | 説明 |
 |----------|------|
-| `electrify <url>` | URLからアプリをビルド |
-| `electrify wizard` | インタラクティブセットアップ |
-| `electrify init` | 設定テンプレートを生成 |
-| `electrify build` | 設定ファイルからビルド |
-| `electrify presets` | 利用可能なプリセットを表示 |
-| `electrify doctor` | 環境をチェック |
-| `electrify --help` | すべてのオプションを表示 |
+| `eweb <url>` | URLからアプリをビルド |
+| `eweb wizard` | インタラクティブセットアップ |
+| `eweb init` | 設定テンプレートを生成 |
+| `eweb build` | 設定ファイルからビルド |
+| `eweb presets` | 利用可能なプリセットを表示 |
+| `eweb doctor` | 環境をチェック |
+| `eweb --help` | すべてのオプションを表示 |
 
 ---
 
@@ -192,7 +192,7 @@ electrify <url> [オプション]
 
 **🎉 初回リリース - Nativefier復活版**
 
-- ✅ インタラクティブウィザード (`electrify wizard`)
+- ✅ インタラクティブウィザード (`eweb wizard`)
 - ✅ 設定ファイルサポート (YAML/JSON)
 - ✅ 8種類のスマートプリセット
 - ✅ ネットワークアイコンURL対応

@@ -35,7 +35,7 @@
 
 ## ✨ 功能特性
 
-- 🚀 **一键构建** - `electrify https://example.com`
+- 🚀 **一键构建** - `eweb https://example.com`
 - 🧙 **交互式向导** - 新手友好的引导设置
 - 📄 **配置文件** - 支持 YAML/JSON，可继承
 - 🎯 **智能预设** - 针对社交、办公、媒体应用优化
@@ -78,29 +78,29 @@ eweb --version
 ### 方式一：交互式向导（推荐新手）
 
 ```bash
-electrify wizard
+eweb wizard
 ```
 
 ### 方式二：一行命令构建
 
 ```bash
-electrify https://web.whatsapp.com
+eweb https://web.whatsapp.com
 ```
 
 ### 方式三：使用预设
 
 ```bash
-electrify https://web.whatsapp.com --preset social
+eweb https://web.whatsapp.com --preset social
 ```
 
 ### 方式四：配置文件
 
 ```bash
 # 生成配置模板
-electrify init
+eweb init
 
 # 编辑 electrify.config.yaml，然后构建
-electrify build
+eweb build
 ```
 
 ---
@@ -120,7 +120,7 @@ electrify build
 
 ```bash
 # 列出所有预设
-electrify presets
+eweb presets
 ```
 
 ---
@@ -153,7 +153,7 @@ extends: "./base.yaml"
 ### 命令行选项
 
 ```bash
-electrify <url> [选项]
+eweb <url> [选项]
 
 选项:
   -n, --name          应用名称
@@ -177,7 +177,7 @@ electrify <url> [选项]
 自动检测并使用 PWA manifest 设置：
 
 ```bash
-electrify https://web.whatsapp.com --pwa
+eweb https://web.whatsapp.com --pwa
 ```
 
 这将会：
@@ -194,10 +194,10 @@ electrify https://web.whatsapp.com --pwa
 
 ```bash
 # GitHub releases
-electrify https://example.com --auto-update github:myorg/myrepo
+eweb https://example.com --auto-update github:myorg/myrepo
 
 # 自定义更新服务器
-electrify https://example.com --auto-update https://updates.example.com
+eweb https://example.com --auto-update https://updates.example.com
 ```
 
 ---
@@ -207,7 +207,7 @@ electrify https://example.com --auto-update https://updates.example.com
 检查你的环境：
 
 ```bash
-electrify doctor
+eweb doctor
 ```
 
 输出：
@@ -230,13 +230,13 @@ electrify doctor
 
 | 命令 | 描述 |
 |------|------|
-| `electrify <url>` | 从 URL 构建应用 |
-| `electrify wizard` | 交互式设置 |
-| `electrify init` | 生成配置模板 |
-| `electrify build` | 从配置文件构建 |
-| `electrify presets` | 列出可用预设 |
-| `electrify doctor` | 检查环境 |
-| `electrify --help` | 显示所有选项 |
+| `eweb <url>` | 从 URL 构建应用 |
+| `eweb wizard` | 交互式设置 |
+| `eweb init` | 生成配置模板 |
+| `eweb build` | 从配置文件构建 |
+| `eweb presets` | 列出可用预设 |
+| `eweb doctor` | 检查环境 |
+| `eweb --help` | 显示所有选项 |
 
 ---
 
@@ -304,7 +304,7 @@ npm test
 
 **🎉 首次发布 - Nativefier 复兴版**
 
-- ✅ 交互式向导 (`electrify wizard`)
+- ✅ 交互式向导 (`eweb wizard`)
 - ✅ 配置文件支持 (YAML/JSON)
 - ✅ 8 种智能预设
 - ✅ 网络图标 URL 支持

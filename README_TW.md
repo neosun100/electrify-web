@@ -35,7 +35,7 @@
 
 ## ✨ 功能特色
 
-- 🚀 **一鍵建置** - `electrify https://example.com`
+- 🚀 **一鍵建置** - `eweb https://example.com`
 - 🧙 **互動式精靈** - 新手友善的引導設定
 - 📄 **設定檔** - 支援 YAML/JSON，可繼承
 - 🎯 **智慧預設** - 針對社群、辦公、媒體應用最佳化
@@ -78,29 +78,29 @@ eweb --version
 ### 方式一：互動式精靈（推薦新手）
 
 ```bash
-electrify wizard
+eweb wizard
 ```
 
 ### 方式二：一行指令建置
 
 ```bash
-electrify https://web.whatsapp.com
+eweb https://web.whatsapp.com
 ```
 
 ### 方式三：使用預設
 
 ```bash
-electrify https://web.whatsapp.com --preset social
+eweb https://web.whatsapp.com --preset social
 ```
 
 ### 方式四：設定檔
 
 ```bash
 # 產生設定範本
-electrify init
+eweb init
 
 # 編輯 electrify.config.yaml，然後建置
-electrify build
+eweb build
 ```
 
 ---
@@ -120,7 +120,7 @@ electrify build
 
 ```bash
 # 列出所有預設
-electrify presets
+eweb presets
 ```
 
 ---
@@ -153,7 +153,7 @@ extends: "./base.yaml"
 ### 命令列選項
 
 ```bash
-electrify <url> [選項]
+eweb <url> [選項]
 
 選項:
   -n, --name          應用程式名稱
@@ -176,13 +176,13 @@ electrify <url> [選項]
 
 | 指令 | 描述 |
 |------|------|
-| `electrify <url>` | 從 URL 建置應用程式 |
-| `electrify wizard` | 互動式設定 |
-| `electrify init` | 產生設定範本 |
-| `electrify build` | 從設定檔建置 |
-| `electrify presets` | 列出可用預設 |
-| `electrify doctor` | 檢查環境 |
-| `electrify --help` | 顯示所有選項 |
+| `eweb <url>` | 從 URL 建置應用程式 |
+| `eweb wizard` | 互動式設定 |
+| `eweb init` | 產生設定範本 |
+| `eweb build` | 從設定檔建置 |
+| `eweb presets` | 列出可用預設 |
+| `eweb doctor` | 檢查環境 |
+| `eweb --help` | 顯示所有選項 |
 
 ---
 
@@ -192,7 +192,7 @@ electrify <url> [選項]
 
 **🎉 首次發布 - Nativefier 復興版**
 
-- ✅ 互動式精靈 (`electrify wizard`)
+- ✅ 互動式精靈 (`eweb wizard`)
 - ✅ 設定檔支援 (YAML/JSON)
 - ✅ 8 種智慧預設
 - ✅ 網路圖示 URL 支援
