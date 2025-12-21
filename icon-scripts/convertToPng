@@ -10,21 +10,23 @@ set -e
 
 HAVE_IMAGEMAGICK=
 HAVE_GRAPHICSMAGICK=
+HAVE_MAGICK=
 
-type convert &>/dev/null && type identify &>/dev/null && HAVE_IMAGEMAGICK=true
+type magick &>/dev/null && HAVE_MAGICK=true
+type convert &>/dev/null && type identify &>/dev/null && [[ -z "$HAVE_MAGICK" ]] && HAVE_IMAGEMAGICK=true
 type gm &>/dev/null && gm version | grep GraphicsMagick &>/dev/null && HAVE_GRAPHICSMAGICK=true
 
-if [[ -z "$HAVE_IMAGEMAGICK" && -z "$HAVE_GRAPHICSMAGICK" ]]; then
-	type convert >/dev/null 2>&1 || echo >&2 "Cannot find required ImageMagick 'convert' executable"
-	type identify >/dev/null 2>&1 || echo >&2 "Cannot find required ImageMagick 'identify' executable"
-	type gm &>/dev/null && gm version | grep GraphicsMagick &>/dev/null && echo >&2 "Cannot find GraphicsMagick"
-	echo >&2 "ImageMagic or GraphicsMagic is required, please ensure they are in your PATH"
+if [[ -z "$HAVE_MAGICK" && -z "$HAVE_IMAGEMAGICK" && -z "$HAVE_GRAPHICSMAGICK" ]]; then
+	echo >&2 "ImageMagick or GraphicsMagick is required, please ensure they are in your PATH"
 	exit 1
 fi
 
 CONVERT="convert"
 IDENTIFY="identify"
-if [[ -z "$HAVE_IMAGEMAGICK" ]]; then
+if [[ -n "$HAVE_MAGICK" ]]; then
+	CONVERT="magick"
+	IDENTIFY="magick identify"
+elif [[ -z "$HAVE_IMAGEMAGICK" ]]; then
 	# we must have GraphicsMagick then
 	CONVERT="gm convert"
 	IDENTIFY="gm identify"

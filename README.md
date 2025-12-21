@@ -11,8 +11,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/node/v/electrify-web.svg)](https://nodejs.org)
 
-<img src=".github/nativefier-walkthrough.gif" alt="Demo" width="600">
-
 </div>
 
 ---

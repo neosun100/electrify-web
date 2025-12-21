@@ -51,13 +51,15 @@ fi
 HAVE_IMAGEMAGICK=
 HAVE_SIPS=
 HAVE_GRAPHICSMAGICK=
+HAVE_MAGICK=
 CONVERT=
 
 type gm &>/dev/null && gm version | grep GraphicsMagick &>/dev/null && HAVE_GRAPHICSMAGICK=true && CONVERT="gm convert"
-type convert &>/dev/null && HAVE_IMAGEMAGICK=true && CONVERT="convert"
+type magick &>/dev/null && HAVE_MAGICK=true && CONVERT="magick"
+type convert &>/dev/null && [[ -z "$HAVE_MAGICK" ]] && HAVE_IMAGEMAGICK=true && CONVERT="convert"
 type sips &>/dev/null && HAVE_SIPS=true
 
-if [[ -n "$HAVE_IMAGEMAGICK" || -n "$HAVE_GRAPHICSMAGICK" ]]; then
+if [[ -n "$HAVE_MAGICK" || -n "$HAVE_IMAGEMAGICK" || -n "$HAVE_GRAPHICSMAGICK" ]]; then
   PNG_PATH="$(mktemp -d -t nativefier-iconset-XXXXXX)/icon.png"
   "${BASH_SOURCE%/*}/convertToPng" "${SOURCE}" "${PNG_PATH}"
   make_iconset_imagemagick "${PNG_PATH}" "${DEST}"

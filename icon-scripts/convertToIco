@@ -11,9 +11,10 @@ set -e
 CONVERT=
 
 type gm &>/dev/null && gm version | grep GraphicsMagick &>/dev/null && CONVERT="gm convert"
-type convert &>/dev/null && CONVERT="convert"
+type magick &>/dev/null && CONVERT="magick"
+type convert &>/dev/null && [[ -z "$CONVERT" ]] && CONVERT="convert"
 
-[[ -z "$CONVERT" ]] && { echo >&2 "Cannot find required ImageMagick Convert or GraphicsMagick executable"; exit 1; }
+[[ -z "$CONVERT" ]] && { echo >&2 "Cannot find required ImageMagick or GraphicsMagick executable"; exit 1; }
 
 SOURCE=$1
 DEST=$2
