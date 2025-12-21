@@ -1,4 +1,5 @@
 import * as log from 'loglevel';
+import { fetchPWAInfo, pwaInfoToOptions, PWAInfo } from '../pwa';
 
 /**
  * URL 到预设的映射规则
@@ -197,5 +198,56 @@ export function logSmartDefaults(url: string, currentPreset?: string): void {
     if (defaults.preset) {
       log.info(`   Tip: Use --preset ${defaults.preset} for optimized settings\n`);
     }
+  }
+}
+
+
+/**
+ * 获取 PWA 信息并生成建议选项
+ */
+export async function inferFromPWA(url: string): Promise<{
+  name?: string;
+  icon?: string;
+  backgroundColor?: string;
+  hasPWA: boolean;
+}> {
+  try {
+    const pwaInfo = await fetchPWAInfo(url);
+    const options = pwaInfoToOptions(pwaInfo, url);
+    
+    return {
+      name: options.name,
+      icon: options.icon,
+      backgroundColor: options.backgroundColor,
+      hasPWA: !!pwaInfo.manifest,
+    };
+  } catch (err) {
+    log.debug('Failed to fetch PWA info:', err);
+    return { hasPWA: false };
+  }
+}
+
+/**
+ * 输出 PWA 检测信息
+ */
+export async function logPWAInfo(url: string): Promise<void> {
+  try {
+    const pwaInfo = await fetchPWAInfo(url);
+    
+    if (pwaInfo.manifest) {
+      log.info('📱 PWA detected:');
+      if (pwaInfo.manifest.name) {
+        log.info(`   Name: ${pwaInfo.manifest.name}`);
+      }
+      if (pwaInfo.manifest.display) {
+        log.info(`   Display: ${pwaInfo.manifest.display}`);
+      }
+      if (pwaInfo.manifest.icons?.length) {
+        log.info(`   Icons: ${pwaInfo.manifest.icons.length} available`);
+      }
+      log.info('');
+    }
+  } catch {
+    // 静默失败
   }
 }

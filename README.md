@@ -13,10 +13,11 @@ nativefier 'web.whatsapp.com'
 ## ✨ What's New in v53
 
 - 🧙 **Interactive Wizard** - Guided setup with `nativefier wizard`
-- 📄 **Config File Support** - YAML/JSON configuration files
+- 📄 **Config File Support** - YAML/JSON configuration files with inheritance
 - 🎯 **Smart Presets** - Optimized settings for social, productivity, media apps
 - 💡 **Smart Suggestions** - Auto-detect app type and suggest optimal settings
 - 🌐 **Network Icon Support** - Use icon URLs directly: `-i "https://..."`
+- 📱 **PWA Support** - Auto-detect PWA manifest with `--pwa` flag
 - 🩺 **Doctor Command** - Check system environment with `nativefier doctor`
 - 🔐 **CVE Security Check** - Warns about vulnerable Electron versions
 - 🚀 **Improved CLI** - Better help, examples, and error messages
@@ -32,6 +33,11 @@ nativefier wizard
 ### Quick Build
 ```bash
 nativefier 'https://example.com'
+```
+
+### With PWA Auto-Detection
+```bash
+nativefier 'https://web.whatsapp.com' --pwa
 ```
 
 ### With Preset

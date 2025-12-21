@@ -97,7 +97,12 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       description: 'use a preset configuration (social, productivity, media, email, developer, minimal, secure, kiosk)',
       type: 'string',
     })
-    .group(['config', 'preset'], decorateYargOptionGroup('Quick Start Options'))
+    .option('pwa', {
+      description: 'auto-detect PWA manifest and use its settings (name, icon, colors)',
+      type: 'boolean',
+      default: false,
+    })
+    .group(['config', 'preset', 'pwa'], decorateYargOptionGroup('Quick Start Options'))
     // App Creation Options
     .option('a', {
       alias: 'arch',

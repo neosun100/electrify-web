@@ -143,6 +143,7 @@ export type RawOptions = {
   browserwindowOptions?: BrowserWindowOptions;
   buildVersion?: string;
   clearCache?: boolean;
+  pwa?: boolean;
   conceal?: boolean;
   counter?: boolean;
   crashReporter?: string;

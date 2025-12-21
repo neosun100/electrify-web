@@ -28,6 +28,7 @@ import { normalizeUrl } from './normalizeUrl';
 import { parseJson } from '../utils/parseUtils';
 import { createAutoLoginInjectFile } from '../autologin';
 import { downloadFile, getTempDir } from '../helpers/helpers';
+import { inferFromPWA } from '../infer/inferDefaults';
 import * as path from 'path';
 
 /**
@@ -60,6 +61,28 @@ const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
+  // PWA 自动检测
+  if (rawOptions.pwa && rawOptions.targetUrl) {
+    log.info('📱 Detecting PWA manifest...');
+    const pwaDefaults = await inferFromPWA(rawOptions.targetUrl);
+    if (pwaDefaults.hasPWA) {
+      log.info('✅ PWA manifest found!');
+      if (pwaDefaults.name && !rawOptions.name) {
+        log.info(`   Using name: ${pwaDefaults.name}`);
+        rawOptions.name = pwaDefaults.name;
+      }
+      if (pwaDefaults.icon && !rawOptions.icon) {
+        log.info(`   Using icon from manifest`);
+        rawOptions.icon = pwaDefaults.icon;
+      }
+      if (pwaDefaults.backgroundColor && !rawOptions.backgroundColor) {
+        rawOptions.backgroundColor = pwaDefaults.backgroundColor;
+      }
+    } else {
+      log.info('⚠️ No PWA manifest found, using defaults');
+    }
+  }
+
   // 提前处理网络图标
   const resolvedIcon = await resolveIcon(rawOptions.icon);
   
