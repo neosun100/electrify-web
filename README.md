@@ -15,6 +15,10 @@ nativefier 'web.whatsapp.com'
 - 🧙 **Interactive Wizard** - Guided setup with `nativefier wizard`
 - 📄 **Config File Support** - YAML/JSON configuration files
 - 🎯 **Smart Presets** - Optimized settings for social, productivity, media apps
+- 💡 **Smart Suggestions** - Auto-detect app type and suggest optimal settings
+- 🌐 **Network Icon Support** - Use icon URLs directly: `-i "https://..."`
+- 🩺 **Doctor Command** - Check system environment with `nativefier doctor`
+- 🔐 **CVE Security Check** - Warns about vulnerable Electron versions
 - 🚀 **Improved CLI** - Better help, examples, and error messages
 - 🔒 **Enhanced Security** - Removed annoying 90-day warnings, better defaults
 
@@ -107,6 +111,7 @@ nativefier build
 | `nativefier init` | Generate config file template |
 | `nativefier build` | Build from config file |
 | `nativefier presets` | List available presets |
+| `nativefier doctor` | Check system environment |
 | `nativefier --help` | Show all options |
 
 ## Common Options
@@ -116,7 +121,7 @@ nativefier <url> [options]
 
 Options:
   --name, -n          App name
-  --icon, -i          Path to icon file
+  --icon, -i          Path to icon file or URL (auto-downloads)
   --preset            Use preset configuration
   --config            Path to config file
   --platform, -p      Target platform (windows, mac, linux)

@@ -26,6 +26,7 @@ import {
   generateConfigTemplate,
 } from './config';
 import { runWizard, runQuickWizard } from './wizard';
+import { runDoctor } from './security';
 
 // @types/yargs@17.x started pretending yargs.argv can be a promise:
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/8e17f9ca957a06040badb53ae7688fbb74229ccf/types/yargs/index.d.ts#L73
@@ -51,6 +52,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       '  $0 init                Generate config file template\n' +
       '  $0 build               Build from config file\n' +
       '  $0 presets             List available presets\n' +
+      '  $0 doctor              Check system environment\n' +
       '  $0 <url>               Quick build from URL',
     )
     .example(
@@ -738,6 +740,28 @@ if (require.main === module) {
       console.log(`  ${preset.name.padEnd(15)} - ${preset.description}`);
     });
     console.log('\nUsage: nativefier <url> --preset <name>\n');
+  }
+  // doctor 命令 - 诊断环境
+  else if (firstArg === 'doctor') {
+    console.log('\n🩺 Nativefier Doctor - Environment Check\n');
+    runDoctor()
+      .then(({ passed, checks }) => {
+        checks.forEach((check) => {
+          const icon = check.status === 'pass' ? '✅' : check.status === 'warn' ? '⚠️' : '❌';
+          console.log(`  ${icon} ${check.name.padEnd(15)} ${check.message}`);
+        });
+        console.log('');
+        if (passed) {
+          console.log('✅ All checks passed! Ready to build.\n');
+        } else {
+          console.log('❌ Some checks failed. Please fix the issues above.\n');
+          process.exit(1);
+        }
+      })
+      .catch((err) => {
+        console.error('Doctor check failed:', err);
+        process.exit(1);
+      });
   }
   // 常规构建流程
   else {

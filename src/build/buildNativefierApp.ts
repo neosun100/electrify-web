@@ -16,6 +16,8 @@ import { useOldAppOptions, findUpgradeApp } from '../helpers/upgrade/upgrade';
 import { AppOptions, RawOptions } from '../../shared/src/options/model';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
+import { performSecurityCheck } from '../security';
+import { logSmartDefaults } from '../infer/inferDefaults';
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'icon',
@@ -170,6 +172,16 @@ export async function buildNativefierApp(
 
   const options = await getOptions(rawOptions);
   log.debug('options', options);
+
+  // 智能推荐
+  if (options.packager.targetUrl) {
+    logSmartDefaults(options.packager.targetUrl, rawOptions.preset);
+  }
+
+  // 安全检测
+  if (options.packager.electronVersion) {
+    await performSecurityCheck(options.packager.electronVersion);
+  }
 
   if (options.packager.platform === 'darwin' && isWindows()) {
     // electron-packager has to extract the desired electron package for the target platform.
