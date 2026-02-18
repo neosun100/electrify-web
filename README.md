@@ -45,6 +45,7 @@
 - 🔄 **Auto-Update** - Built-in update system
 - 🩺 **Doctor Command** - Environment diagnostics
 - 🔐 **CVE Checking** - Warns about vulnerable Electron versions
+- 🔑 **Auto Login** - Unified login for both form-based and HTTP Basic Auth
 - 🖥️ **Cross-Platform** - Windows, macOS, Linux
 
 ---
@@ -105,52 +106,7 @@ eweb build
 
 ---
 
-## 🎯 Presets
-
-| Preset | Best For | Features |
-|--------|----------|----------|
-| `social` | WhatsApp, Discord, Telegram | Single instance, tray, notifications |
-| `productivity` | Notion, Trello, Slack | Optimized window, tray |
-| `media` | YouTube, Netflix, Spotify | Honest user-agent, video-optimized |
-| `email` | Gmail, Outlook | Notifications, badge counter |
-| `developer` | GitHub, GitLab, Jira | Dev tools enabled |
-| `minimal` | Basic apps | Minimal configuration |
-| `secure` | Banking, sensitive apps | Strict security |
-| `kiosk` | Public displays | Full-screen, locked |
-
-```bash
-# List all presets
-eweb presets
-```
-
----
-
-## ⚙️ Configuration
-
-### Config File (electrify.config.yaml)
-
-```yaml
-app:
-  name: "My App"
-  url: "https://example.com"
-  icon: "./icon.png"  # or URL: "https://..."
-
-window:
-  width: 1280
-  height: 800
-
-behavior:
-  singleInstance: true
-  tray: true
-
-# Use a preset as base
-preset: "social"
-
-# Inherit from another config
-extends: "./base.yaml"
-```
-
-### CLI Options
+## ⚙️ CLI Options
 
 ```bash
 eweb <url> [options]
@@ -162,6 +118,7 @@ Options:
   --config            Config file path
   --pwa               Auto-detect PWA manifest
   --auto-update       Enable auto-update (github:owner/repo or URL)
+  --auto-login        Auto-login with credentials (format: user:pass)
   -p, --platform      Target platform (windows, mac, linux)
   -a, --arch          CPU architecture (x64, arm64)
   --single-instance   Allow only one instance
@@ -169,74 +126,6 @@ Options:
 ```
 
 See [API.md](API.md) for full documentation.
-
----
-
-## 📱 PWA Support
-
-Automatically detect and use PWA manifest settings:
-
-```bash
-eweb https://web.whatsapp.com --pwa
-```
-
-This will:
-- Extract app name from manifest
-- Download the best icon
-- Apply theme colors
-- Configure display mode
-
----
-
-## 🔄 Auto-Update
-
-Enable automatic updates for your app:
-
-```bash
-# GitHub releases
-eweb https://example.com --auto-update github:myorg/myrepo
-
-# Custom update server
-eweb https://example.com --auto-update https://updates.example.com
-```
-
----
-
-## 🩺 Diagnostics
-
-Check your environment:
-
-```bash
-eweb doctor
-```
-
-Output:
-```
-🩺 Electrify Web Doctor - Environment Check
-
-  ✅ Node.js         v20.10.0 ✓
-  ✅ npm             10.2.0 ✓
-  ✅ Platform        linux (x64)
-  ✅ Disk Space      50G available
-  ✅ Network         npm registry reachable ✓
-  ✅ Electron Cache  3 versions cached
-
-✅ All checks passed! Ready to build.
-```
-
----
-
-## 🛠️ Commands
-
-| Command | Description |
-|---------|-------------|
-| `eweb <url>` | Build app from URL |
-| `eweb wizard` | Interactive setup |
-| `eweb init` | Generate config template |
-| `eweb build` | Build from config file |
-| `eweb presets` | List available presets |
-| `eweb doctor` | Check environment |
-| `eweb --help` | Show all options |
 
 ---
 
@@ -248,6 +137,7 @@ electrify-web/
 │   ├── cli.ts              # Command-line interface
 │   ├── build/              # Build logic
 │   ├── options/            # Option processing
+│   ├── autologin/          # Auto-login (form + HTTP Basic Auth)
 │   ├── presets/            # Preset configurations
 │   ├── config/             # Config file handling
 │   ├── wizard/             # Interactive wizard
@@ -264,96 +154,26 @@ electrify-web/
 
 ---
 
-## 🔧 Tech Stack
-
-- **TypeScript** - Type-safe development
-- **Electron** - Desktop app framework
-- **electron-packager** - App packaging
-- **yargs** - CLI argument parsing
-- **axios** - HTTP requests
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) first.
-
-```bash
-# Clone the repo
-git clone https://github.com/neosun100/electrify-web.git
-cd electrify-web
-
-# Install dependencies
-npm install
-
-# Build
-npm run build
-
-# Link for local testing
-npm link
-
-# Run tests
-npm test
-```
-
----
-
 ## 📋 Changelog
+
+### v1.2.0 (2026-02-18)
+
+- 🔑 Unified `--auto-login`: one flag handles both web form login and HTTP Basic Auth (401)
+- ✅ Comprehensive test suite for autologin module (100% coverage)
 
 ### v1.1.2 (2025-12-21)
 
 - 🧹 Auto-cleanup stale records when apps are manually deleted
 - 📍 Auto-update paths when apps are moved to /Applications
 
-### v1.1.1 (2025-12-21)
-
-- 🔍 Smart app path detection for moved apps (macOS/Linux)
-
 ### v1.1.0 (2025-12-21)
 
 - ✨ New command: `eweb list` - List all installed apps
 - ✨ New command: `eweb remove <name>` - Uninstall an app
-- 📝 App registry at `~/.electrify-web/registry.json`
-
-### v1.0.7 (2025-12-21)
-
-- 🔧 Fix: Ensure `cli.js` has executable permission for global install
-
-### v1.0.6 (2025-12-21)
-
-- 💬 Improve: Better error messages for icon conversion failures
-
-### v1.0.5 (2025-12-21)
-
-- 🔧 Fix: Correct iconset sizes for macOS `iconutil` (removed invalid 64x64)
-
-### v1.0.4 (2025-12-21)
-
-- ✨ Feat: Enable PWA detection by default (`--pwa` is now true)
-
-### v1.0.3 (2025-12-21)
-
-- 🔧 Fix: Prefer native `sips` over ImageMagick on macOS for icon conversion
-
-### v1.0.2 (2025-12-21)
-
-- 🔧 Fix: Support ImageMagick v7 (`magick` command instead of deprecated `convert`)
 
 ### v1.0.0 (2025-12-21)
 
 **🎉 Initial Release - Revival of Nativefier**
-
-- ✅ Interactive wizard (`eweb wizard`)
-- ✅ Config file support (YAML/JSON)
-- ✅ 8 smart presets
-- ✅ Network icon URL support
-- ✅ PWA manifest detection (enabled by default)
-- ✅ Auto-update system
-- ✅ CVE security checking
-- ✅ Doctor command
-- ✅ Removed 90-day warning
-- ✅ Smart URL-based suggestions
-- ✅ Short command alias: `eweb`
 
 Based on Nativefier v52.0.0, with 2000+ lines of new code.
 
@@ -364,29 +184,3 @@ Based on Nativefier v52.0.0, with 2000+ lines of new code.
 [MIT](LICENSE.md) © Electrify Web Contributors
 
 This project is a fork of [Nativefier](https://github.com/nativefier/nativefier), originally created by Goh Jia Hao.
-
----
-
-## ⭐ Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=neosun100/electrify-web&type=Date)](https://star-history.com/#neosun100/electrify-web)
-
----
-
-## 📱 Follow Us
-
-<div align="center">
-
-![WeChat](https://img.aws.xin/uPic/扫码_搜索联合传播样式-标准色版.png)
-
-</div>
-
----
-
-<div align="center">
-
-**If this project helps you, please give it a ⭐!**
-
-Made with ❤️ by the Electrify Web community
-
-</div>
