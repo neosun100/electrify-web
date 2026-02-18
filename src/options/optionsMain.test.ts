@@ -105,6 +105,47 @@ test('it should set the accessibility prompt option to true by default', async (
   expect(result.nativefier.accessibilityPrompt).toEqual(true);
 });
 
+test('auto-login sets both inject script and basic auth credentials', async () => {
+  const params: RawOptions = {
+    targetUrl: 'https://example.com/',
+    tray: 'false',
+    autoLogin: 'admin:secret',
+  };
+  const result = await getOptions(params);
+  // Should inject auto-login script
+  expect(result.nativefier.inject).toBeDefined();
+  expect(result.nativefier.inject!.length).toBeGreaterThanOrEqual(1);
+  expect(result.nativefier.inject!.some((p) => p.includes('auto-login.js'))).toBe(true);
+  // Should set basic auth
+  expect(result.nativefier.basicAuthUsername).toBe('admin');
+  expect(result.nativefier.basicAuthPassword).toBe('secret');
+});
+
+test('auto-login does not override explicit basic auth', async () => {
+  const params: RawOptions = {
+    targetUrl: 'https://example.com/',
+    tray: 'false',
+    autoLogin: 'autouser:autopass',
+    basicAuthUsername: 'explicit',
+    basicAuthPassword: 'explicit-pass',
+  };
+  const result = await getOptions(params);
+  // Explicit basic auth should take precedence
+  expect(result.nativefier.basicAuthUsername).toBe('explicit');
+  expect(result.nativefier.basicAuthPassword).toBe('explicit-pass');
+});
+
+test('auto-login with invalid format does not set anything', async () => {
+  const params: RawOptions = {
+    targetUrl: 'https://example.com/',
+    tray: 'false',
+    autoLogin: 'nocolon',
+  };
+  const result = await getOptions(params);
+  expect(result.nativefier.basicAuthUsername).toBeUndefined();
+  expect(result.nativefier.basicAuthPassword).toBeUndefined();
+});
+
 test.each([
   { platform: 'darwin', expectedPlatform: 'darwin' },
   { platform: 'mAc', expectedPlatform: 'darwin' },
