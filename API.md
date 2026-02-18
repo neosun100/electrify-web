@@ -46,6 +46,7 @@
     - [[y]](#y)
     - [[zoom]](#zoom)
   - [Internal Browser Options](#internal-browser-options)
+    - [[auto-login]](#auto-login)
     - [[file-download-options]](#file-download-options)
     - [[inject]](#inject)
     - [[lang]](#lang)
@@ -549,6 +550,33 @@ _[New in 7.6.0]_ Y location of the packaged application window.
 _[New in 7.6.0]_ Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 
 ### Internal Browser Options
+
+#### [auto-login]
+
+```
+--auto-login <username:password>
+```
+
+_[New in 1.2.0]_ Unified auto-login that handles both form-based login and HTTP Basic Auth (401) automatically.
+
+- **Format**: `username:password` (credentials separated by the first colon)
+- **Form login**: Injects a script that auto-fills username/password fields and clicks the submit button
+- **HTTP Basic Auth**: Automatically responds to 401 challenges without showing a login dialog
+- **Credentials encoding**: Base64 encoded in the app (not encrypted, suitable for personal/internal use)
+
+Both mechanisms are enabled simultaneously. If `--basic-auth-username` / `--basic-auth-password` are also provided, they take precedence for HTTP Basic Auth.
+
+Example:
+
+```bash
+eweb https://internal-app.example.com --auto-login "admin:mypassword"
+```
+
+Passwords containing colons are supported:
+
+```bash
+eweb https://example.com --auto-login "user:pass:with:colons"
+```
 
 #### [file-download-options]
 
