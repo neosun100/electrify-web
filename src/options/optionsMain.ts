@@ -26,7 +26,7 @@ import {
 } from '../../shared/src/options/model';
 import { normalizeUrl } from './normalizeUrl';
 import { parseJson } from '../utils/parseUtils';
-import { createAutoLoginInjectFile } from '../autologin';
+import { createAutoLoginInjectFile, parseAutoLogin } from '../autologin';
 import { downloadFile, getTempDir } from '../helpers/helpers';
 import { inferFromPWA } from '../infer/inferDefaults';
 import * as path from 'path';
@@ -302,15 +302,24 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
     }
   }
 
-  // 处理自动登录
+  // 处理自动登录：同时覆盖表单登录和 HTTP Basic Auth
   if (rawOptions.autoLogin) {
-    const autoLoginScript = createAutoLoginInjectFile(rawOptions.autoLogin);
-    if (autoLoginScript) {
-      if (!options.nativefier.inject) {
-        options.nativefier.inject = [];
+    const credentials = parseAutoLogin(rawOptions.autoLogin);
+    if (credentials) {
+      // 1. 注入表单自动填充脚本（处理网页表单登录）
+      const autoLoginScript = createAutoLoginInjectFile(rawOptions.autoLogin);
+      if (autoLoginScript) {
+        if (!options.nativefier.inject) {
+          options.nativefier.inject = [];
+        }
+        options.nativefier.inject.push(autoLoginScript);
       }
-      options.nativefier.inject.push(autoLoginScript);
-      log.info('🔐 Auto-login script will be injected');
+      // 2. 设置 Basic Auth 凭据（处理 HTTP 401 认证）
+      if (!options.nativefier.basicAuthUsername) {
+        options.nativefier.basicAuthUsername = credentials.username;
+        options.nativefier.basicAuthPassword = credentials.password;
+      }
+      log.info('🔐 Auto-login enabled (form + HTTP Basic Auth)');
     }
   }
 

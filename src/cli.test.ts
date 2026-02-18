@@ -94,6 +94,7 @@ describe('initArgs + parseArgs', () => {
   test.each([
     { arg: 'app-copyright', shortArg: '', value: '(c) Nativefier' },
     { arg: 'app-version', shortArg: '', value: '2.0.0' },
+    { arg: 'auto-login', shortArg: '', value: 'admin:secret' },
     { arg: 'background-color', shortArg: '', value: '#FFAA88' },
     { arg: 'basic-auth-username', shortArg: '', value: 'user' },
     { arg: 'basic-auth-password', shortArg: '', value: 'p@ssw0rd' },
