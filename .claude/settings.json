@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk ls *)",
+      "Bash(rtk read *)",
+      "Bash(node lib/cli.js https://claude.ai --name \"Claude.R220\" --platform mac --arch arm64 ./ClaudeR220-app)",
+      "Bash(rtk find *)",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/electron/package.json'\\).version\\)\")"
+    ]
+  }
+}

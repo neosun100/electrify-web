@@ -4,6 +4,7 @@ import * as path from 'path';
 import {
   desktopCapturer,
   ipcMain,
+  nativeTheme,
   BrowserWindow,
   Event,
   HandlerDetails,
@@ -63,6 +64,9 @@ export async function createMainWindow(
     defaultHeight: options.height || 800,
   });
 
+  const defaultBgColor =
+    nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff';
+
   const mainWindow = new BrowserWindow({
     frame: !options.hideWindowFrame,
     width: mainWindowState.width,
@@ -83,7 +87,7 @@ export async function createMainWindow(
     // We want a consistent behavior on all OSes, but Windows needs help to not glitch.
     // So, we manually mainWindow.show() later, see a few lines below
     show: options.tray !== 'start-in-tray' && process.platform !== 'win32',
-    backgroundColor: options.backgroundColor,
+    backgroundColor: options.backgroundColor ?? defaultBgColor,
     ...getDefaultWindowOptions(
       outputOptionsToWindowOptions(options, nativeTabsSupported()),
     ),
@@ -189,7 +193,7 @@ function setupCloseEvent(options: OutputOptions, window: BrowserWindow): void {
         window.moveTabToNewWindow();
       }
       window.setFullScreen(false);
-      window.once('leave-full-screen', (event: Event) =>
+      window.once('leave-full-screen', () =>
         hideWindow(
           window,
           event,

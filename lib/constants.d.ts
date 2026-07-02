@@ -1,6 +1,6 @@
 export declare const DEFAULT_APP_NAME = "APP";
-export declare const DEFAULT_ELECTRON_VERSION = "25.7.0";
-export declare const DEFAULT_CHROME_VERSION = "114.0.5735.289";
+export declare const DEFAULT_ELECTRON_VERSION = "41.2.1";
+export declare const DEFAULT_CHROME_VERSION = "146.0.7680.188";
 export declare const DEFAULT_FIREFOX_VERSION = "116.0.3";
 export declare const DEFAULT_SAFARI_VERSION: {
     majorVersion: number;

@@ -53,8 +53,8 @@ const appArgs =
   IS_PLAYWRIGHT && PLAYWRIGHT_CONFIG
     ? (JSON.parse(PLAYWRIGHT_CONFIG) as OutputOptions)
     : (JSON.parse(
-        fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'),
-      ) as OutputOptions);
+      fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'),
+    ) as OutputOptions);
 
 log.debug('appArgs', appArgs);
 // Do this relatively early so that we can start storing appData with the app
@@ -190,13 +190,13 @@ if (appArgs.lang) {
 let currentBadgeCount = 0;
 const setDockBadge = isOSX()
   ? (count?: number | string, bounce = false): void => {
-      if (count !== undefined) {
-        app.dock.setBadge(count.toString());
-        if (bounce && typeof count === 'number' && count > currentBadgeCount)
-          app.dock.bounce();
-        currentBadgeCount = typeof count === 'number' ? count : 0;
-      }
+    if (count !== undefined && app.dock) {
+      app.dock.setBadge(count.toString());
+      if (bounce && typeof count === 'number' && count > currentBadgeCount)
+        app.dock.bounce();
+      currentBadgeCount = typeof count === 'number' ? count : 0;
     }
+  }
   : (): void => undefined;
 
 app.on('window-all-closed', () => {

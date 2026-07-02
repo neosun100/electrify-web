@@ -821,7 +821,7 @@ Current known internal login pages:
 - `github.com/login` , `github.com/session`
 - `accounts.google.com` , `mail.google.com/accounts/SetOSID`
 - `linkedin.com/uas/login`
-- `login.live.com` , `login.microsoftonline.com`
+- `login.live.com` , `login.microsoftonline.com` , `login.microsoft.com`
 - `okta.com`
 - `twitter.com/oauth/authenticate`
 - `workspaceair.com`

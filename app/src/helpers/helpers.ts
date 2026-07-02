@@ -196,6 +196,7 @@ function isInternalLoginPage(url: string): boolean {
     'linkedin\\.[a-zA-Z\\.]*/uas/login', // LinkedIn
     'login\\.live\\.[a-zA-Z\\.]*', // Microsoft
     'login\\.microsoftonline\\.[a-zA-Z\\.]*', // Microsoft
+    'login\\.microsoft\\.[a-zA-Z\\.]*', // Microsoft (unified login, incl. FIDO/passkey)
     'okta\\.[a-zA-Z\\.]*', // Okta
     'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
     'appleid\\.apple\\.com/auth/authorize', // Apple

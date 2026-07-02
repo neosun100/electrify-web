@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import './patches/extractZipNodeCompat';
 import 'source-map-support/register';
 
 import * as fs from 'fs';

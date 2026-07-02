@@ -130,16 +130,15 @@ export function generateMenu(
         label: 'Clear App Data',
         click: (
           item: MenuItem,
-          focusedWindow: BrowserWindow | undefined,
+          window: Electron.BaseWindow | undefined,
         ): void => {
+          const focusedWindow =
+            (window as BrowserWindow | undefined) ?? mainWindow;
           log.debug('Clear App Data.click', {
             item,
             focusedWindow,
             mainWindow,
           });
-          if (!focusedWindow) {
-            focusedWindow = mainWindow;
-          }
           clearAppData(focusedWindow).catch((err) =>
             log.error('clearAppData ERROR', err),
           );
@@ -189,17 +188,16 @@ export function generateMenu(
         visible: mainWindow.isFullScreenable() || isOSX(),
         click: (
           item: MenuItem,
-          focusedWindow: BrowserWindow | undefined,
+          window: Electron.BaseWindow | undefined,
         ): void => {
+          const focusedWindow =
+            (window as BrowserWindow | undefined) ?? mainWindow;
           log.debug('Toggle Full Screen.click()', {
             item,
             focusedWindow,
-            isFullScreen: focusedWindow?.isFullScreen(),
-            isFullScreenable: focusedWindow?.isFullScreenable(),
+            isFullScreen: focusedWindow.isFullScreen(),
+            isFullScreenable: focusedWindow.isFullScreenable(),
           });
-          if (!focusedWindow) {
-            focusedWindow = mainWindow;
-          }
           if (focusedWindow.isFullScreenable()) {
             focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
           } else if (isOSX()) {
@@ -256,11 +254,13 @@ export function generateMenu(
       {
         label: 'Toggle Developer Tools',
         accelerator: isOSX() ? 'Alt+Cmd+I' : 'Ctrl+Shift+I',
-        click: (item: MenuItem, focusedWindow: BrowserWindow | undefined) => {
+        click: (
+          item: MenuItem,
+          window: Electron.BaseWindow | undefined,
+        ) => {
+          const focusedWindow =
+            (window as BrowserWindow | undefined) ?? mainWindow;
           log.debug('Toggle Developer Tools.click()', { item, focusedWindow });
-          if (!focusedWindow) {
-            focusedWindow = mainWindow;
-          }
           focusedWindow.webContents.toggleDevTools();
         },
       },
